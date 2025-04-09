@@ -1,19 +1,20 @@
 
-### User Requirements Specification Document
-##### DIBRIS – Università di Genova. Scuola Politecnica, Software Engineering Course 80154
+### GURPS Character Sheet Desktop Tool
+### User Requirements Specification Document (URS)
+##### DIBRIS – Università di Genova. Scuola Politecnica, Software Engineering Course 
 
 
-**VERSION : X.X**
+**VERSION : 1.0**
 
 **Authors**  
-XXXX
-YYYY
+Massimo Narizzano
+
 
 **REVISION HISTORY**
 
 | Version    | Date        | Authors      | Notes        |
 | ----------- | ----------- | ----------- | ----------- |
-| X.X |  | |  |
+| 1.0 | 09-04-2025 | M. Narizzano| Starting the URS |
 
 # Table of Contents
 
@@ -37,26 +38,32 @@ YYYY
 
 <a name="sp1.1"></a>
 
-### 1.1 Document Scope
+The purpose of this document is to define the user requirements for a desktop-based software tool that allows users to create, edit, manage, and export GURPS (Generic Universal RolePlaying System) character sheets. This tool will assist players and Game Masters (GMs) in managing characters during campaign preparation and gameplay.
 
+1.2 Scope
+### 1.1 Document Scope
+This application will support the creation of GURPS 4th Edition character sheets. It will include features for entering core attributes, skills, advantages/disadvantages, equipment, and more. Users will be able to calculate derived stats and export the completed sheet as a printable or digital file (PDF, JSON, etc.).
 
 <a name="sp1.2"></a>
 
 ### 1.2 Definitios and Acronym
 
+<a name="sp1.3"></a>
 
 | Acronym				| Definition | 
 | ------------------------------------- | ----------- | 
-| XXXX                                  | XXXX |
+| PDF                                  | XXXX |
+| GURPS                                 | Generic Universal Role Playing System |
 
-<a name="sp1.3"></a>
+
 
 ### 1.3 References 
 
 <a name="p2"></a>
-
+https://en.wikipedia.org/wiki/GURPS#:~:text=The%20Generic%20Universal%20Role%20Playing,published%20by%20Steve%20Jackson%20Games.
 ## 2. System Description
 <a name="sp2.15"></a>
+
 
 ### 2.1 Context and Motivation
 
