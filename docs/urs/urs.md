@@ -87,6 +87,14 @@ This application will support the creation of GURPS 4th Edition character sheets
 <a name="sp3.1"></a>
 ### 3.1 Stakeholders
 
+- GURPS players and GMs
+
+- Tabletop RPG hobbyists
+
+- Game designers using GURPS
+
+- Developers and testers of the tool
+
 <a name="sp3.2"></a>
 ### 3.2 Functional Requirements 
 
