@@ -38,12 +38,9 @@ Massimo Narizzano
 
 <a name="sp1.1"></a>
 
-The purpose of this document is to define the user requirements for a desktop-based software tool that allows users to create, edit, manage, and export GURPS (Generic Universal RolePlaying System) character sheets. This tool will assist players and Game Masters (GMs) in managing characters during campaign preparation and gameplay.
 
-1.2 Scope
 ### 1.1 Document Scope
-This application will support the creation of GURPS 4th Edition character sheets. It will include features for entering core attributes, skills, advantages/disadvantages, equipment, and more. Users will be able to calculate derived stats and export the completed sheet as a printable or digital file (PDF, JSON, etc.).
-
+The purpose of this document is to define the user requirements for a desktop-based software tool that allows users to create, edit, manage, and export GURPS (Generic Universal RolePlaying System) character sheets. This tool will assist players and Game Masters (GMs) in managing characters during campaign preparation and gameplay.
 <a name="sp1.2"></a>
 
 ### 1.2 Definitios and Acronym
@@ -60,9 +57,14 @@ This application will support the creation of GURPS 4th Edition character sheets
 ### 1.3 References 
 
 <a name="p2"></a>
-https://en.wikipedia.org/wiki/GURPS#:~:text=The%20Generic%20Universal%20Role%20Playing,published%20by%20Steve%20Jackson%20Games.
+- https://en.wikipedia.org/wiki/GURPS#:~:text=The%20Generic%20Universal%20Role%20Playing,published%20by%20Steve%20Jackson%20Games.
+
+- https://www.sjgames.com/gurps/lite/3e/gurpslite.pdf
+
 ## 2. System Description
 <a name="sp2.15"></a>
+This application will support the creation of GURPS 4th Edition character sheets. It will include features for entering core attributes, skills, advantages/disadvantages, equipment, and more. Users will be able to calculate derived stats and export the completed sheet as a printable or digital file (PDF, JSON, etc.).
+
 
 
 ### 2.1 Context and Motivation
