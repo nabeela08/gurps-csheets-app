@@ -117,8 +117,8 @@ The system will serve both novice and experienced GURPS players, reducing the ti
 | 4.0 |  The system should allow the user to save to a local HD a CS|M|
 | 5.0 |  The system should allow the user to print a CS |M|
 | 6.0 |  The system should allow the user to export a CS into pdf |M|
-| 7.0 |  The system should allow the user to export a CS into word |M|
-| 8.0 |  The system should allow the user to export a CS into bmp |M|
+| 7.0 |  The system should allow the user to export a CS into word |D|
+| 8.0 |  The system should allow the user to export a CS into bmp |D|
 
 ### 3.2.2 Attribute Management 
 
