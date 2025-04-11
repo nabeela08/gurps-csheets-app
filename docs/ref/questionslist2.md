@@ -12,51 +12,31 @@
     5. Would tooltips or inline help for GURPS rules be useful?
 
 3. **Character Sheet Content**
-
-  3.1 What information must be visible at all times while using the character sheet?
-
-  3.2 What parts of a GURPS character are most tedious to manage manually?
-
-  3.3 Do you track custom content (e.g., homebrew traits or gear)? How would you want to enter it?
-
-  3.4 Which derived stats do you expect the tool to calculate for you?
-  
-  3.5 Do you use optional GURPS rules (e.g., alternate encumbrance, fatigue, tech levels)?
-
+    1. What information must be visible at all times while using the character sheet?
+    2. What parts of a GURPS character are most tedious to manage manually?
+    3. Do you track custom content (e.g., homebrew traits or gear)? How would you want to enter it?
+    4. Which derived stats do you expect the tool to calculate for you?
+    5. Do you use optional GURPS rules (e.g., alternate encumbrance, fatigue, tech levels)?
+       
 4. **Functionality & Features**
-
-  4.1 Should the tool support multiple characters or party views?
-
-  4.2 Do you want to store notes, journal entries, or backstories in the sheet?
-
-  4.3 How do you prefer saving your sheets (local file, cloud, export formats)?
-
-  4.4 Would you want character sharing or syncing with others?
-
-  4.5 How important is the ability to print a physical sheet? In color or black & white?
+    1. Should the tool support multiple characters or party views?
+    2. Do you want to store notes, journal entries, or backstories in the sheet?
+    3. How do you prefer saving your sheets (local file, cloud, export formats)?
+    4. Would you want character sharing or syncing with others?
+    5. How important is the ability to print a physical sheet? In color or black & white?
 
 5. **Technical & Platform**
-
-  5.1 Which platforms do you use: Windows, macOS, Linux?
-
-  5.2 Do you prefer a downloadable app or a web-based tool?
-
-  5.3 Would you want your data to sync between devices or stay strictly offline?
-
-  5.4 Would integration with other RPG tools or virtual tabletops be useful?
+   1. Which platforms do you use: Windows, macOS, Linux?
+   2. Do you prefer a downloadable app or a web-based tool?
+   3. Would you want your data to sync between devices or stay strictly offline?
+   4. Would integration with other RPG tools or virtual tabletops be useful?
 
 6. **User Permissions & Security**
-
-  6.1 Should the tool support different user roles (e.g., GM vs Player)?
-
-  6.2 Do you need password protection or private sections for GMs?
-  
-  6.3 Do you care about version history or undo functionality?
+   1. Should the tool support different user roles (e.g., GM vs Player)?
+   2. Do you need password protection or private sections for GMs?
+   3. Do you care about version history or undo functionality?
   
 7. **Output & Printing**
-
-  7.1 In what formats do you usually export or print your character sheets?
-
-  7.2 Would you like the sheet to be editable in PDF form?
-
-  7.3 Should the tool offer layout templates (compact, full, minimalist)?
+   1. In what formats do you usually export or print your character sheets?
+   2. Would you like the sheet to be editable in PDF form?
+   3. Should the tool offer layout templates (compact, full, minimalist)?
