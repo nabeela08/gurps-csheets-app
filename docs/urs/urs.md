@@ -107,9 +107,49 @@ The system will serve both novice and experienced GURPS players, reducing the ti
 <a name="sp3.2"></a>
 ### 3.2 Functional Requirements 
 
+### 3.2.1 General Character Creation 
+
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
 | 1.0 |  XXXXX |M|
+| 2.0 |  XXXXX |M|
+| 3.0 |  XXXXX |M|
+| 4.0 |  XXXXX |M|
+| 5.0 |  XXXXX |M|
+| 6.0 |  XXXXX |M|
+| 7.0 |  XXXXX |M|
+| 8.0 |  XXXXX |M|
+| 9.0 |  XXXXX |M|
+
+### 3.2.2 Attribute Management 
+
+| ID | Descrizione | Priorità |
+| --------------- | ----------- | ---------- | 
+| 1.0 |  XXXXX |M|
+| 2.0 |  XXXXX |M|
+| 3.0 |  XXXXX |M|
+| 4.0 |  XXXXX |M|
+| 5.0 |  XXXXX |M|
+| 6.0 |  XXXXX |M|
+| 7.0 |  XXXXX |M|
+| 8.0 |  XXXXX |M|
+| 9.0 |  XXXXX |M|
+
+### 3.2.2 Skills Management 
+
+| ID | Descrizione | Priorità |
+| --------------- | ----------- | ---------- | 
+| 1.0 |  XXXXX |M|
+| 2.0 |  XXXXX |M|
+| 3.0 |  XXXXX |M|
+| 4.0 |  XXXXX |M|
+| 5.0 |  XXXXX |M|
+| 6.0 |  XXXXX |M|
+| 7.0 |  XXXXX |M|
+| 8.0 |  XXXXX |M|
+| 9.0 |  XXXXX |M|
+
+
 
 <a name="sp3.3"></a>
 ### 3.2 Non-Functional Requirements 
