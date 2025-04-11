@@ -15,6 +15,8 @@ Massimo Narizzano
 | Version    | Date        | Authors      | Notes        |
 | ----------- | ----------- | ----------- | ----------- |
 | 1.0 | 09-04-2025 | M. Narizzano| Starting the URS |
+| 1.1 | 10-04-2025 | M. Narizzano| Adding section 2 |
+
 
 # Table of Contents
 
@@ -63,17 +65,24 @@ The purpose of this document is to define the user requirements for a desktop-ba
 
 ## 2. System Description
 <a name="sp2.15"></a>
-This application will support the creation of GURPS 4th Edition character sheets. It will include features for entering core attributes, skills, advantages/disadvantages, equipment, and more. Users will be able to calculate derived stats and export the completed sheet as a printable or digital file (PDF, JSON, etc.).
-
+This document outlines the User Requirements Specification (URS) for a Character Management Tool designed to assist players in creating, customizing, and maintaining characters for tabletop role-playing games, with a specific focus on GURPS (Generic Universal RolePlaying System).
 
 
 ### 2.1 Context and Motivation
 
 <a name="sp2.2"></a>
 
+GURPS is a flexible and detailed role-playing system published by Steve Jackson Games. Unlike many RPG systems that are tailored to specific genres or settings, GURPS is designed to be universal—capable of supporting campaigns in any genre, from high fantasy and science fiction to modern-day espionage or historical drama. This versatility is one of GURPS’s greatest strengths, but it also contributes to the complexity of character creation.
+
+Creating a character in GURPS involves selecting from a wide array of attributes, skills, advantages, disadvantages, and point-based customizations. While this system allows for incredible depth and personalization, it is also notoriously intricate and sometimes tedious, especially for new or casual players. The process often requires frequent cross-referencing of rules, precise point accounting, and manual tracking of character development.
+
 ### 2.2 Project Obectives 
 
 <a name="p3"></a>
+
+The purpose of this tool is to simplify and streamline the character creation and management process for GURPS players. By providing a structured and interactive interface, the tool will guide users through the character creation workflow, assist with calculations and rule validations, and offer support for ongoing character progression throughout a campaign.
+
+The system will serve both novice and experienced GURPS players, reducing the time investment and likelihood of errors while preserving the system’s depth and customizability. Ultimately, the tool aims to enhance the user experience, facilitate creative exploration, and support long-term campaign engagement.
 
 ## 3. Requirements
 
