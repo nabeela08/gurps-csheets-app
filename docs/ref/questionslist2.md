@@ -1,14 +1,14 @@
 1.  **General Questions**
   
-  1.1. What do you currently use to create and manage GURPS characters?
+  1. What do you currently use to create and manage GURPS characters?
 
-  1.2. What are your biggest frustrations with existing tools or methods?
+  2. What are your biggest frustrations with existing tools or methods?
 
-  1.3. What would your ideal GURPS character builder look like?
+  3. What would your ideal GURPS character builder look like?
  
-  1.4. How often do you create or update GURPS characters?
+  4. How often do you create or update GURPS characters?
 
-  1.5 Would you prefer a tool that focuses on character creation, gameplay tracking, or both?
+  5. Would you prefer a tool that focuses on character creation, gameplay tracking, or both?
 
 2. **UI/UX & Usability**
 
