@@ -1,10 +1,12 @@
 1. General Specification
     1. The system should allow the user to create an empty Character Sheet (CS)
-    2. The system should allow the user to load a saved CS
-    3. The system should allow the user to save a CS
-    4. The system should allow the user to share a CS with other systems 
+    2. The system should allow the user to modify a CS
+    3. The system should allow the user to load from a local HD a saved CS
+    4. The system should allow the user to save from a local HD a CS 
     5. The system should allow the user to print a CS
-    6. The system should allow the user to export a CS
+    6. The system should allow the user to export a CS into pdf
+    7. The system should allow the user to export a CS into word
+    8. The system should allow the user to export a CS into bmp
 3. General Information
     1. The system should allow the user to add a player name, a character name, Character appearance, Character story, creation date.
     2. The system should allow the user to select if a CS is a NPC or a PC
