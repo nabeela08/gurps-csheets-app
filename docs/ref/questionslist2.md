@@ -1,26 +1,15 @@
 1.  **General Questions**
-  
-  1. What do you currently use to create and manage GURPS characters?
-
-  2. What are your biggest frustrations with existing tools or methods?
-
-  3. What would your ideal GURPS character builder look like?
- 
-  4. How often do you create or update GURPS characters?
-
-  5. Would you prefer a tool that focuses on character creation, gameplay tracking, or both?
-
+    1. What do you currently use to create and manage GURPS characters?
+    2. What are your biggest frustrations with existing tools or methods?
+    3. What would your ideal GURPS character builder look like?
+    4. How often do you create or update GURPS characters?
+    5. Would you prefer a tool that focuses on character creation, gameplay tracking, or both?
 2. **UI/UX & Usability**
-
-  2.1 How important is visual layout or printability in your character sheets?
-
-  2.2 Would you prefer a tabbed interface, collapsible sections, or something else?
-
-  2.3 What level of automation do you expect (e.g., auto-calculated values, validation checks)?
-
-  2.4 What kinds of filters or search features would help you navigate your character's data?
-
-  2.5 Would tooltips or inline help for GURPS rules be useful?
+    1. How important is visual layout or printability in your character sheets?
+    2. Would you prefer a tabbed interface, collapsible sections, or something else?
+    3. What level of automation do you expect (e.g., auto-calculated values, validation checks)?
+    4. What kinds of filters or search features would help you navigate your character's data?
+    5. Would tooltips or inline help for GURPS rules be useful?
 
 3. **Character Sheet Content**
 
