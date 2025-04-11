@@ -111,15 +111,14 @@ The system will serve both novice and experienced GURPS players, reducing the ti
 
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
-| 1.0 |  XXXXX |M|
-| 2.0 |  XXXXX |M|
-| 3.0 |  XXXXX |M|
-| 4.0 |  XXXXX |M|
-| 5.0 |  XXXXX |M|
-| 6.0 |  XXXXX |M|
-| 7.0 |  XXXXX |M|
-| 8.0 |  XXXXX |M|
-| 9.0 |  XXXXX |M|
+| 1.0 |  The system should allow the user to create an empty Character Sheet (CS) |M|
+| 2.0 |  The system should allow the user to modify a CS |M|
+| 3.0 |  The system should allow the user to load from a local HD a saved CS |M|
+| 4.0 |  The system should allow the user to save to a local HD a CS|M|
+| 5.0 |  The system should allow the user to print a CS |M|
+| 6.0 |  The system should allow the user to export a CS into pdf |M|
+| 7.0 |  The system should allow the user to export a CS into word |M|
+| 8.0 |  The system should allow the user to export a CS into bmp |M|
 
 ### 3.2.2 Attribute Management 
 
