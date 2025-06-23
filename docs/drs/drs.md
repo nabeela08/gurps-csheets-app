@@ -5,13 +5,13 @@
 DIBRIS – Università di Genova. Scuola Politecnica, Corso di Ingegneria del Software 80154
 
 
-<div align='right'> <b> Authors </b> <br> AA <br> BB  </div>
+<div align='right'> <b> Authors </b> <br> NABEELA MASROOR (S5822193) <br> ANMOL BABAR  </div>
 
 ### REVISION HISTORY
 
 Version | Data | Author(s)| Notes
 ---------|------|--------|------
-1 | 23/06/25 | NABEELA MASROOR <br> BB | First Versionn of the document. Document Template
+1 | 23/06/25 | NABEELA MASROOR <br>  | First Versionn of the document. Document Template
 
 ## Table of Content
 
