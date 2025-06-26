@@ -236,11 +236,11 @@ Version | Data | Author(s)| Notes
 <details> 
     <summary> Put a summary of the section
     </summary>
-    <ul>
-        1. User selects a level and lesson
-        2. System fetches related questions and options
-        3. User submits answers via Python interface
-        4. System evaluates and calculates score
-        5. StudentAttempt record is created and stored in the database
-    </ul>
+     <ol>
+    <li>User selects a level and lesson</li>
+    <li>System fetches related questions and options</li>
+    <li>User submits answers via Python interface</li>
+    <li>System evaluates and calculates score</li>
+    <li>StudentAttempt record is created and stored in the database</li>
+  </ol>
 </details>
