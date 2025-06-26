@@ -1,5 +1,5 @@
 
-### GURPS Character Sheet Desktop Tool
+### WORDIAMO - English Learning Platform
 ### User Requirements Specification Document (URS)
 ##### DIBRIS – Università di Genova. Scuola Politecnica, Software Engineering Course 
 
@@ -8,7 +8,8 @@
 
 **Authors**  
 Massimo Narizzano
-
+Nabeela Masroor
+Anmol Babar
 
 **REVISION HISTORY**
 
@@ -16,6 +17,7 @@ Massimo Narizzano
 | ----------- | ----------- | ----------- | ----------- |
 | 1.0 | 09-04-2025 | M. Narizzano| Starting the URS |
 | 1.1 | 10-04-2025 | M. Narizzano| Adding section 2 |
+| 1.2 | 26-06-2025 | Nabeela Masroor | Editing the URS |
 
 
 # Table of Contents
@@ -42,7 +44,7 @@ Massimo Narizzano
 
 
 ### 1.1 Document Scope
-The purpose of this document is to define the user requirements for a desktop-based software tool that allows users to create, edit, manage, and export GURPS (Generic Universal RolePlaying System) character sheets. This tool will assist players and Game Masters (GMs) in managing characters during campaign preparation and gameplay.
+The purpose of this document is to define the user requirements for a MySQL-based backend database that supports an English Learning Platform. This system will allow students to take quizzes based on levels and lessons and will store structured content including questions, options, and user scores.
 <a name="sp1.2"></a>
 
 ### 1.2 Definitios and Acronym
@@ -51,38 +53,44 @@ The purpose of this document is to define the user requirements for a desktop-ba
 
 | Acronym				| Definition | 
 | ------------------------------------- | ----------- | 
-| PDF                                  | XXXX |
-| GURPS                                 | Generic Universal Role Playing System |
-
+| CRUD                                  | Create, Read, Update, Delete |
+| SQL                                   | Structured Query Language |
+| MCQ                                   | Multiple Choice Question |
+| ERD                                   | Entity Relationship Diagram |
+| PK                                    | Primary Key |
+| FK                                    | Foreign Key |
 
 
 ### 1.3 References 
 
 <a name="p2"></a>
-- https://en.wikipedia.org/wiki/GURPS#:~:text=The%20Generic%20Universal%20Role%20Playing,published%20by%20Steve%20Jackson%20Games.
+- [https://en.wikipedia.org/wiki/GURPS#:~:text=The%20Generic%20Universal%20Role%20Playing,published%20by%20Steve%20Jackson%20Games.](https://dev.mysql.com/doc/
 
-- https://www.sjgames.com/gurps/lite/3e/gurpslite.pdf
+- https://pypi.org/project/mysql-connector-python/
 
 ## 2. System Description
 <a name="sp2.15"></a>
-This document outlines the User Requirements Specification (URS) for a Character Management Tool designed to assist players in creating, customizing, and maintaining characters for tabletop role-playing games, with a specific focus on GURPS (Generic Universal RolePlaying System).
-
+This document outlines the User Requirements Specification (URS) for a backend learning platform that allows users to study English by completing quizzes structured by levels and lessons. The system is designed to simplify quiz handling and student progress tracking.
 
 ### 2.1 Context and Motivation
 
 <a name="sp2.2"></a>
 
-GURPS is a flexible and detailed role-playing system published by Steve Jackson Games. Unlike many RPG systems that are tailored to specific genres or settings, GURPS is designed to be universal—capable of supporting campaigns in any genre, from high fantasy and science fiction to modern-day espionage or historical drama. This versatility is one of GURPS’s greatest strengths, but it also contributes to the complexity of character creation.
+The increasing need for flexible, low-cost, and accessible English language learning tools—especially for beginners and self-paced learners—has motivated the creation of this system. The platform will use a level-based structure to guide students progressively through learning stages. Each level includes several lessons, and each lesson has MCQs. The system will be used as a backend service, without frontend or UI for now.
 
-Creating a character in GURPS involves selecting from a wide array of attributes, skills, advantages, disadvantages, and point-based customizations. While this system allows for incredible depth and personalization, it is also notoriously intricate and sometimes tedious, especially for new or casual players. The process often requires frequent cross-referencing of rules, precise point accounting, and manual tracking of character development.
 
 ### 2.2 Project Obectives 
 
 <a name="p3"></a>
 
-The purpose of this tool is to simplify and streamline the character creation and management process for GURPS players. By providing a structured and interactive interface, the tool will guide users through the character creation workflow, assist with calculations and rule validations, and offer support for ongoing character progression throughout a campaign.
-
-The system will serve both novice and experienced GURPS players, reducing the time investment and likelihood of errors while preserving the system’s depth and customizability. Ultimately, the tool aims to enhance the user experience, facilitate creative exploration, and support long-term campaign engagement.
+<ul>
+	<li> Enable structured storage of English learning content using a normalized database schema </li>
+	<li> Support basic CRUD operations for users, questions, options, and quiz scores </li>
+	<li> Allow Python applications to interact with the database using mysql-connector-python </li>
+	<li> Provide level-based progress tracking through the StudentAttempts table </li>
+	<li> Ensure data consistency and scalability for future UI/frontend integration </li>
+	
+</ul>
 
 ## 3. Requirements
 
