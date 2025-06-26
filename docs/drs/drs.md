@@ -96,11 +96,11 @@ Version | Data | Author(s)| Notes
 
 <details> 
     <summary> Description of the overall architecture. </summary>
-    <ul> <li> - Database: MySQL 8.0 </li>
-        - Programming Language: Python 3.x
-        - Library: mysql-connector-python
-        - Diagram Tool: dbdiagram.io (for ERD visualization)
-        - Version Control: GitHub for code and documentation tracking
+    <ul> <li> Database: MySQL 8.0 </li>
+         <li> Programming Language: Python 3.x </li>
+        <li> Library: mysql-connector-python </li>
+        <li> Diagram Tool: dbdiagram.io (for ERD visualization) </li>
+        <li> Version Control: GitHub for code and documentation tracking </li>
     </ul>
 </details>
 
@@ -108,12 +108,12 @@ Version | Data | Author(s)| Notes
 <details> 
     <summary> Put a summary of the section
     </summary>
-    <p>
-        - Only multiple-choice questions are supported
-        - Content is restricted to the English language only
-        - No graphical user interface is included in this version
-        -The database is hosted locally or on a single server
-    </p>
+    <ul>
+        <li>  Only multiple-choice questions are supported </li>
+        <li> Content is restricted to the English language only </li>
+        <li> No graphical user interface is included in this version </li>
+        <li> The database is hosted locally or on a single server </li>
+    </ul>
 </details>
 
 ## <a name="system-overview"></a>  3 System Overview
@@ -142,36 +142,36 @@ Version | Data | Author(s)| Notes
 <details> 
     <summary> The database contains structured information:
     </summary>
-    <p>
-        - Levels
-        - Lessons
-        - Questions
-        - Options
-        - Users
-        - StudentAttempts (scores and attempt history)
-</p>
+    <ul>
+        <li> Levels </li> 
+        <li> Lessons </li> 
+        <li> Questions </li>
+        <li> Options </li>
+        <li> Users </li> 
+        <li> StudentAttempts (scores and attempt history) </li> 
+</ul>
 </details>
 
 #### <a name="inputs"></a>  3.3.1 System Inputs
 <details> 
     <summary> Put a summary of the section
     </summary>
-    <p>
-        - User registration data (username, password)
-        - New level and lesson creation (lesson name, description)
-        - New questions and options for each lesson (question text, options, correct answer)
-        - Student answers during lesson attempts </p>
+    <ul>
+        <li> User registration data (username, password) </li> 
+        <li> New level and lesson creation (lesson name, description) </li> 
+        <li> New questions and options for each lesson (question text, options, correct answer) </li> 
+        <li> Student answers during lesson attempts </li>  </ul>
 </details>
 
 #### <a name="outputs"></a>  3.3.2 System Ouputs
 <details> 
     <summary> Put a summary of the section
     </summary>
-    <p>
-        - List of available levels and lessons
-        - Quiz content (questions and answer choices)
-        - Calculated quiz scores
-        - Student progress history </p>
+    <ul>
+        <li> List of available levels and lessons </li>
+        <li> Quiz content (questions and answer choices) </li> 
+        <li>  Calculated quiz scores</li> 
+        <li> Student progress history  </li>  </ul>
 </details>
 
 ## <a name="sys-module-1"></a>  4 System Module 1
@@ -185,15 +185,15 @@ Version | Data | Author(s)| Notes
 <details> 
     <summary> The ERD includes the following main entities: 
     </summary>
-    <p>
-        - Levels
-        - Lessons
-        - Questions
-        - Options
-        - Users
-        - StudentAttempts
-        
-Relationships are defined using primary and foreign keys. Each level has multiple lessons. Each lesson contains multiple questions. Each question has multiple answer options. Students attempt lessons and their results are stored in the attempts table.
+   <ul>
+       <li> Levels </li>
+       <li> Lessons </li>
+       <li> Questions </li>
+       <li> Options </li> 
+       <li> Users </li> 
+       <li> StudentAttempts </li>
+   </ul>
+ <p> Relationships are defined using primary and foreign keys. Each level has multiple lessons. Each lesson contains multiple questions. Each question has multiple answer options. Students attempt lessons and their results are stored in the attempts table.
     </p>
 </details>
 
@@ -201,27 +201,28 @@ Relationships are defined using primary and foreign keys. Each level has multipl
 <details> 
     <summary> The table structure of class diagram: 
     </summary>
-    <p> 
-        - Levels (level_id PK, level_name)
-        - Lessons (lesson_id PK, lesson_name, level_id FK)
-        - Questions (question_id PK, question_text, lesson_id FK)
-        - Options (option_id PK, question_id FK, option_text, is_correct)
-        - Users (user_id PK, username, password_hash, role)
-        - StudentAttempts (attempt_id PK, user_id FK, lesson_id FK, score, attempt_date)</p>
+    <ul> 
+        <li>Levels (level_id PK, level_name)</li>
+    <li>Lessons (lesson_id PK, lesson_name, level_id FK)</li>
+    <li>Questions (question_id PK, question_text, lesson_id FK)</li>
+    <li>Options (option_id PK, question_id FK, option_text, is_correct)</li>
+    <li>Users (user_id PK, username, password_hash, role)</li>
+    <li>StudentAttempts (attempt_id PK, user_id FK, lesson_id FK, score, attempt_date)</li>
+    </ul>
 </details>
 
 ##### <a name="cd-description"></a>  4.1.1.1 Class Description
 <details> 
     <summary> Put a summary of the section
     </summary>
-    <p>
-        - *Levels* – Stores level titles such as “Beginner”, “A1”, etc.
-        - *Lessons* – Each level contains one or more lessons like “Greetings” or “Numbers”
-        - *Questions* – Stores each quiz question linked to a specific lesson
-        - *Options* – Multiple answer options for each question, with one or more marked correct
-        - *Users* – Student and teacher accounts with secure login info
-        - *StudentAttempts* – Stores each student’s performance including score and attempt date
-    </p>
+    <ul>
+    <li><em>Levels</em> – Stores level titles such as “Beginner”, “A1”, etc.</li>
+    <li><em>Lessons</em> – Each level contains one or more lessons like “Greetings” or “Numbers”</li>
+    <li><em>Questions</em> – Stores each quiz question linked to a specific lesson</li>
+    <li><em>Options</em> – Multiple answer options for each question, with one or more marked correct</li>
+    <li><em>Users</em> – Student and teacher accounts with secure login info</li>
+    <li><em>StudentAttempts</em> – Stores each student’s performance including score and attempt date</li>
+  </ul>
 </details>
 
 #### <a name="od"></a>  4.1.2 Object diagram
@@ -235,11 +236,11 @@ Relationships are defined using primary and foreign keys. Each level has multipl
 <details> 
     <summary> Put a summary of the section
     </summary>
-    <p>
+    <ul>
         1. User selects a level and lesson
         2. System fetches related questions and options
         3. User submits answers via Python interface
         4. System evaluates and calculates score
         5. StudentAttempt record is created and stored in the database
-    </p>
+    </ul>
 </details>
