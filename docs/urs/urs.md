@@ -104,13 +104,13 @@ The increasing need for flexible, low-cost, and accessible English language lear
 <a name="sp3.1"></a>
 ### 3.1 Stakeholders
 
-- GURPS players and GMs
+- English Learners (students)
 
-- Tabletop RPG hobbyists
+- Teachers or content creators 
 
-- Game designers using GURPS
+- Developers of frontend/mobile UI (E)
 
-- Developers and testers of the tool
+- Backend developers & database administrators
 
 <a name="sp3.2"></a>
 ### 3.2 Functional Requirements 
@@ -119,14 +119,14 @@ The increasing need for flexible, low-cost, and accessible English language lear
 
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
-| 1.0 |  The system should allow the user to create an empty Character Sheet (CS) |M|
-| 2.0 |  The system should allow the user to modify a CS |M|
-| 3.0 |  The system should allow the user to load from a local HD a saved CS |M|
-| 4.0 |  The system should allow the user to save to a local HD a CS|M|
-| 5.0 |  The system should allow the user to print a CS |M|
-| 6.0 |  The system should allow the user to export a CS into pdf |M|
-| 7.0 |  The system should allow the user to export a CS into word |D|
-| 8.0 |  The system should allow the user to export a CS into bmp |D|
+| 1.0 |  The system shall allow user account creation with role info |M|
+| 2.0 |  The system shall allow storing and retrieving levels and lessons |M|
+| 3.0 |  The system shall allow insertion of new questions per lesson |M|
+| 4.0 |  The system shall allow multiple answer options per question |M|
+| 5.0 |  The system shall mark at least one option as correct |M|
+| 6.0 |  The system shall allow fetching full quiz content (questions + options) |M|
+| 7.0 |  The system shall allow recording student quiz attempts and scores |M|
+| 8.0 |  The system shall retrieve past scores per student |D|
 
 ### 3.2.2 Attribute Management 
 
@@ -157,10 +157,13 @@ The increasing need for flexible, low-cost, and accessible English language lear
 | 9.0 |  XXXXX |M|
 
 
-
 <a name="sp3.3"></a>
 ### 3.2 Non-Functional Requirements 
  
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
-| 1.0 | XXXXX |M|
+| 1.0 | The system should respond to queries in under 1 second |M|
+| 2.0 | The system should be able to store at least 1000 users and 5000 questions |M|
+| 3.0 | The database should be compatible with Python 3.x |M|
+| 4.0 | Data should be securely stored and protected against injection attacks |M|
+| 5.0 | The database design should allow for future web/mobile frontend integration |E|
