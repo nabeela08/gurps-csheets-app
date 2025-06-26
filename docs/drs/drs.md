@@ -11,7 +11,8 @@ DIBRIS – Università di Genova. Scuola Politecnica, Corso di Ingegneria del So
 
 Version | Data | Author(s)| Notes
 ---------|------|--------|------
-1 | 23/06/25 | NABEELA MASROOR <br>  | First Versionn of the document. Document Template
+1 | 23/06/25 | NABEELA MASROOR <br>  | Version 1.0 . Document Template
+2 | 26/06/25 | NABEELA MASROOR <br>  | Version 2.0 . Document Template
 
 ## Table of Content
 
@@ -76,9 +77,11 @@ Version | Data | Author(s)| Notes
 <details> 
     <summary> Put a summary of the section
     </summary>
-    <p> - MySQL 8.0 Documentation (https://dev.mysql.com/doc/)
-        - Python mysql-connector-python library
-        - dbdiagram.io tool for ERD </p>
+    <ul>
+        <li> MySQL 8.0 Documentation (https://dev.mysql.com/doc/) </li>
+        <li> Python mysql-connector-python library </li>
+       <li> dbdiagram.io tool for ERD </li> 
+    </ul>
 </details>
 
 ## <a name="description"></a> 2 Project Description
@@ -93,12 +96,12 @@ Version | Data | Author(s)| Notes
 
 <details> 
     <summary> Description of the overall architecture. </summary>
-    <p> - Database: MySQL 8.0
+    <ul> <li> - Database: MySQL 8.0 </li>
         - Programming Language: Python 3.x
         - Library: mysql-connector-python
         - Diagram Tool: dbdiagram.io (for ERD visualization)
         - Version Control: GitHub for code and documentation tracking
-    </p>
+    </ul>
 </details>
 
 ### <a name="constraints"></a> 2.3 Assumption and Constraint 
