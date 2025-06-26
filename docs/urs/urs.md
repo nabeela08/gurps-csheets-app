@@ -64,7 +64,7 @@ The purpose of this document is to define the user requirements for a MySQL-base
 ### 1.3 References 
 
 <a name="p2"></a>
-- [https://en.wikipedia.org/wiki/GURPS#:~:text=The%20Generic%20Universal%20Role%20Playing,published%20by%20Steve%20Jackson%20Games.](https://dev.mysql.com/doc/
+- https://dev.mysql.com/doc/
 
 - https://pypi.org/project/mysql-connector-python/
 
