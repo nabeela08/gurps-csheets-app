@@ -4,7 +4,7 @@ Wordiamo is a simple, interactive platform designed to support learners improve 
 Through a variety of carefully structured exercises and challenges, Wordiamo helps users build confidence and accuracy in English—step by step.
 
 ### Technologies Used
-MySQL
-Python
+- MySQL
+- Python
 
 
