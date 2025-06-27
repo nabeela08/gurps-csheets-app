@@ -5,7 +5,7 @@
 DIBRIS – Università di Genova. Scuola Politecnica, Corso di Ingegneria del Software 80154
 
 
-<div align='right'> <b> Authors </b> <br> NABEELA MASROOR (S5822193) <br> ANMOL BABAR  </div>
+<div align='right'> <b> Authors </b> <br> NABEELA MASROOR (S5822193) <br> ANMOL BABAR (S6189822) </div>
 
 ### REVISION HISTORY
 
@@ -52,9 +52,9 @@ Version | Data | Author(s)| Notes
 
 ### <a name="def"></a> 1.2 Definitions
 <details> 
-    <summary> Put a summary of the section
+<!--     <summary> Put a summary of the section
     </summary>
-    <p>This sub section should describe ...</p>
+    <p>This sub section should describe ...</p> -->
     
 | Term          | Definition    |
 | ------------- | ------------- |
@@ -75,8 +75,8 @@ Version | Data | Author(s)| Notes
 
 ### <a name="biblio"></a> 1.4 Bibliography
 <details> 
-    <summary> Put a summary of the section
-    </summary>
+<!--     <summary> Put a summary of the section
+    </summary> -->
     <ul>
         <li> MySQL 8.0 Documentation (https://dev.mysql.com/doc/) </li>
         <li> Python mysql-connector-python library </li>
@@ -106,8 +106,8 @@ Version | Data | Author(s)| Notes
 
 ### <a name="constraints"></a> 2.3 Assumption and Constraint 
 <details> 
-    <summary> Put a summary of the section
-    </summary>
+<!--     <summary> Put a summary of the section
+    </summary> -->
     <ul>
         <li>  Only multiple-choice questions are supported </li>
         <li> Content is restricted to the English language only </li>
@@ -118,15 +118,16 @@ Version | Data | Author(s)| Notes
 
 ## <a name="system-overview"></a>  3 System Overview
 <details> 
-    <summary> Put a summary of the section
-    </summary> <p> The system is designed to facilitate structured learning. Users progress through levels, each of which contains multiple lessons. Each lesson contains a set of questions with multiple-choice options. Python scripts are used to retrieve data, accept user input, and store results in the database. 
+<!-- <!--     <summary> Put a summary of the section
+    </summary>  -->
+    <p> The system is designed to facilitate structured learning. Users progress through levels, each of which contains multiple lessons. Each lesson contains a set of questions with multiple-choice options. Python scripts are used to retrieve data, accept user input, and store results in the database. 
  </p>
 </details>
 
 ### <a name="architecture"></a>  3.1 System Architecture
 <details> 
     <summary> The architecture follows a simple three-tier model:
- ** User → Python Application → MySQL Database **
+ <i> User → Python Application → MySQL Database </i>
     </summary>
     <p>The system consists of a Python application layer that connects to a MySQL database. The user interacts through this layer to access the quizzes and submit answers. The database is used for persistent storage of all learning data. </p>
 </details>
@@ -154,8 +155,8 @@ Version | Data | Author(s)| Notes
 
 #### <a name="inputs"></a>  3.3.1 System Inputs
 <details> 
-    <summary> Put a summary of the section
-    </summary>
+<!--     <summary> Put a summary of the section
+    </summary> -->
     <ul>
         <li> User registration data (username, password) </li> 
         <li> New level and lesson creation (lesson name, description) </li> 
@@ -165,8 +166,8 @@ Version | Data | Author(s)| Notes
 
 #### <a name="outputs"></a>  3.3.2 System Ouputs
 <details> 
-    <summary> Put a summary of the section
-    </summary>
+<!--     <summary> Put a summary of the section
+    </summary> -->
     <ul>
         <li> List of available levels and lessons </li>
         <li> Quiz content (questions and answer choices) </li> 
@@ -213,11 +214,11 @@ Version | Data | Author(s)| Notes
 
 ##### <a name="cd-description"></a>  4.1.1.1 Class Description
 <details> 
-    <summary> Put a summary of the section
-    </summary>
+<!--     <summary> Put a summary of the section
+    </summary> -->
     <ul>
     <li><em>Levels</em> – Stores level titles such as “Beginner”, “A1”, etc.</li>
-    <li><em>Lessons</em> – Each level contains one or more lessons like “Greetings” or “Numbers”</li>
+    <li><em>Lessons</em> – Each level contains one or more lessons like “Greetings” or “Verbs”</li>
     <li><em>Questions</em> – Stores each quiz question linked to a specific lesson</li>
     <li><em>Options</em> – Multiple answer options for each question, with one or more marked correct</li>
     <li><em>Users</em> – Student and teacher accounts with secure login info</li>
@@ -227,15 +228,15 @@ Version | Data | Author(s)| Notes
 
 #### <a name="od"></a>  4.1.2 Object diagram
 <details> 
-    <summary> This may show an example where a *User* attempts a *Lesson* that contains *Questions* with *Options* .
+    <summary> This may show an example where a <i>User</i> attempts a <i>Lesson</i> that contains <i>Questions</i> with <i>Options</i> .
     </summary>
     <p>Useful for visualizing the object instances and their relationships in runtime.</p>
 </details>
 
 #### <a name="dm"></a>  4.2 Dynamic Models
 <details> 
-    <summary> Put a summary of the section
-    </summary>
+<!--     <summary> Put a summary of the section
+    </summary> -->
      <ol>
     <li>User selects a level and lesson</li>
     <li>System fetches related questions and options</li>
