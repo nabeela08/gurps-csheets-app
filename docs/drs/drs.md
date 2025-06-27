@@ -127,7 +127,7 @@ Version | Data | Author(s)| Notes
 ### <a name="architecture"></a>  3.1 System Architecture
 <details> 
     <summary> The architecture follows a simple three-tier model:
- <i> User → Python Application → MySQL Database </i>
+ <b> User → Python Application → MySQL Database </b>
     </summary>
     <p>The system consists of a Python application layer that connects to a MySQL database. The user interacts through this layer to access the quizzes and submit answers. The database is used for persistent storage of all learning data. </p>
 </details>
@@ -228,7 +228,7 @@ Version | Data | Author(s)| Notes
 
 #### <a name="od"></a>  4.1.2 Object diagram
 <details> 
-    <summary> This may show an example where a <b>User</b> attempts a <i>Lesson</i> that contains <i>Questions</i> with <i>Options</i> .
+    <summary> This may show an example where a <b>User</b> attempts a <b>Lesson</b> that contains <b>Questions</b> with <b>Options</b> .
     </summary>
     <p>Useful for visualizing the object instances and their relationships in runtime.</p>
 </details>
