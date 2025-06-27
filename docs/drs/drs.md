@@ -228,7 +228,7 @@ Version | Data | Author(s)| Notes
 
 #### <a name="od"></a>  4.1.2 Object diagram
 <details> 
-    <summary> This may show an example where a <i>User</i> attempts a <i>Lesson</i> that contains <i>Questions</i> with <i>Options</i> .
+    <summary> This may show an example where a <b>User</b> attempts a <i>Lesson</i> that contains <i>Questions</i> with <i>Options</i> .
     </summary>
     <p>Useful for visualizing the object instances and their relationships in runtime.</p>
 </details>
