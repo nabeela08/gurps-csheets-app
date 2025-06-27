@@ -132,11 +132,11 @@ The increasing need for flexible, low-cost, and accessible English language lear
 
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
-| 1.0 |  XXXXX |M|
-| 2.0 |  XXXXX |M|
-| 3.0 |  XXXXX |M|
-| 4.0 |  XXXXX |M|
-| 5.0 |  XXXXX |M|
+| 1.0 |  User Level |M|
+| 2.0 |  Native Language |M|
+| 3.0 |  Lesson Count |M|
+| 4.0 |  Preferred Learning Focus |O|
+| 5.0 |  Registration Date |M|
 | 6.0 |  XXXXX |M|
 | 7.0 |  XXXXX |M|
 | 8.0 |  XXXXX |M|
@@ -146,14 +146,14 @@ The increasing need for flexible, low-cost, and accessible English language lear
 
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
-| 1.0 |  XXXXX |M|
-| 2.0 |  XXXXX |M|
-| 3.0 |  XXXXX |M|
-| 4.0 |  XXXXX |M|
-| 5.0 |  XXXXX |M|
-| 6.0 |  XXXXX |M|
-| 7.0 |  XXXXX |M|
-| 8.0 |  XXXXX |M|
+| 1.0 |  Vocabulary |M|
+| 2.0 |  Grammar |M|
+| 3.0 |  Sentence Formation |M|
+| 4.0 |  Fill-in-the-blank Exercises |M|
+| 5.0 |  Error Correction |M|
+| 6.0 |  Reading Comprehension |O|
+| 7.0 |  Synonyms & Antonyms |O|
+| 8.0 |  Idioms |0|
 | 9.0 |  XXXXX |M|
 
 
