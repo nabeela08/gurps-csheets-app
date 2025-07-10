@@ -114,7 +114,6 @@ Version | Data | Author(s)| Notes
     <ul>
         <li>  Only multiple-choice questions are supported </li>
         <li> Content is restricted to the English language only </li>
-        <li> No graphical user interface is included in this version </li>
         <li> The database is hosted locally or on a single server </li>
     </ul>
 </details>
