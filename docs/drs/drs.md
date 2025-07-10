@@ -13,8 +13,8 @@ Version | Data | Author(s)| Notes
 ---------|------|--------|------
 1 | 23/06/25 | NABEELA MASROOR <br>  | Version 1.0 . Document Template
 2 | 26/06/25 | NABEELA MASROOR <br>  | Version 2.0 . Document Template
-3 | 09/07/25 | NABEELA MASROOR, ANMOL BABAR <br>  | Version 3.0 . Completed DRS implementation details
-
+3 | 09/07/25 | ANMOL BABAR <br>  | Version 3.0 . DRS implementation details
+3 | 10/07/25 | ANMOL BABAR <br>  | Version 4.0 . update DRS implementation details
 ## Table of Content
 
 1. [Introduction](#intro)
@@ -137,9 +137,12 @@ Version | Data | Author(s)| Notes
 
 **Tier 1 - Presentation Layer (Minimal):**
 <ul>
-    <li>Command-line interface or simple script execution</li>
-    <li>graphical user interface </li>
-    <li>Input/output through Python console or API calls</li>
+<li>Graphical User Interface (GUI) for user interaction</li> 
+<li>Web-based interface</li>
+<li>User-friendly forms for registration, login, and  quiz-taking</li>
+<li>Visual display of quiz questions and multiple choice options</li>
+<li>Progress tracking dashboard for students</li>
+<li>RESTful API calls to backend Python application</li>
 </ul>
 
 **Tier 2 - Application Layer (Python):**
