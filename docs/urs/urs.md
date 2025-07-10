@@ -18,21 +18,22 @@ Anmol Babar
 | 1.0 | 09-04-2025 | M. Narizzano| Starting the URS |
 | 1.1 | 10-04-2025 | M. Narizzano| Adding section 2 |
 | 1.2 | 26-06-2025 | Nabeela Masroor | Editing the URS |
+| 1.3 | 09-07-2025 | Anmol Babar | Editing URS requirements |
 
 
 # Table of Contents
 
 1. [Introduction](#p1)
 	1. [Document Scope](#sp1.1)
-	2. [Definitios and Acronym](#sp1.2) 
+	2. [Definitions and Acronym](#sp1.2) 
 	3. [References](#sp1.3)
 2. [System Description](#p2)
 	1. [Context and Motivation](#sp2.1)
 	2. [Project Objectives](#sp2.2)
 3. [Requirement](#p3)
- 	1. [Stakeholders](#sp3.1)
- 	2. [Functional Requirements](#sp3.2)
- 	3. [Non-Functional Requirements](#sp3.3)
+	1. [Stakeholders](#sp3.1)
+	2. [Functional Requirements](#sp3.2)
+	3. [Non-Functional Requirements](#sp3.3)
   
   
 
@@ -47,7 +48,7 @@ Anmol Babar
 The purpose of this document is to define the user requirements for a MySQL-based backend database that supports an English Learning Platform. This system will allow students to take quizzes based on levels and lessons and will store structured content including questions, options, and user scores.
 <a name="sp1.2"></a>
 
-### 1.2 Definitios and Acronym
+### 1.2 Definitions and Acronym
 
 <a name="sp1.3"></a>
 
@@ -106,11 +107,9 @@ The increasing need for flexible, low-cost, and accessible English language lear
 
 - English Learners (students)
 
-- Teachers or content creators 
+- Backend developers & database administrators - System maintainers
 
-- Developers of frontend/mobile UI (E)
-
-- Backend developers & database administrators
+- Content will be pre-loaded in the database (no content creation interface needed)
 
 <a name="sp3.2"></a>
 ### 3.2 Functional Requirements 
@@ -119,46 +118,62 @@ The increasing need for flexible, low-cost, and accessible English language lear
 
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
-| 1.0 |  The system shall allow user account creation with role info |M|
+| 1.0 |  The system shall allow user account creation with authentication |M|
 | 2.0 |  The system shall allow storing and retrieving levels and lessons |M|
-| 3.0 |  The system shall allow insertion of new questions per lesson |M|
+| 3.0 |  The system shall have pre-loaded questions per lesson |M|
 | 4.0 |  The system shall allow multiple answer options per question |M|
 | 5.0 |  The system shall mark at least one option as correct |M|
 | 6.0 |  The system shall allow fetching full quiz content (questions + options) |M|
 | 7.0 |  The system shall allow recording student quiz attempts and scores |M|
 | 8.0 |  The system shall retrieve past scores per student |D|
+| 9.0 |  The system shall authenticate users before quiz access |M|
+| 10.0 | The system shall prevent access to higher levels until prerequisites are met |D|
 
-### 3.2.2 Attribute Management 
+### 3.2.2 User Profile Management 
 
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
-| 1.0 |  User Level |M|
-| 2.0 |  Native Language |M|
-| 3.0 |  Lesson Count |M|
-| 4.0 |  Preferred Learning Focus |O|
-| 5.0 |  Registration Date |M|
-| 6.0 |  XXXXX |M|
-| 7.0 |  XXXXX |M|
-| 8.0 |  XXXXX |M|
-| 9.0 |  XXXXX |M|
+| 1.0 |  The system shall store user's current level |M|
+| 2.0 |  The system shall track completed lesson count |M|
+| 3.0 |  The system shall store preferred learning focus (grammar/vocabulary) |O|
+| 4.0 |  The system shall record user registration date |M|
+| 5.0 |  The system shall store user email for authentication |M|
+| 6.0 |  The system shall track user's current progress status |M|
+| 7.0 |  The system shall allow users to update their profile |D|
+| 8.0 |  The system shall store user activity timestamps |D|
 
 ### 3.2.2 Skills Management 
 
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
-| 1.0 |  Vocabulary |M|
-| 2.0 |  Grammar |M|
-| 3.0 |  Sentence Formation |M|
-| 4.0 |  Fill-in-the-blank Exercises |M|
-| 5.0 |  Error Correction |M|
-| 6.0 |  Reading Comprehension |O|
-| 7.0 |  Synonyms & Antonyms |O|
-| 8.0 |  Idioms |0|
-| 9.0 |  XXXXX |M|
+| 1.0 |  The system shall support vocabulary questions |M|
+| 2.0 |  The system shall support grammar questions |M|
+| 3.0 |  The system shall support sentence formation exercises |M|
+| 4.0 |  The system shall support fill-in-the-blank exercises |D|
+| 5.0 |  The system shall support error correction questions |D|
+| 6.0 |  The system shall support reading comprehension |O|
+| 7.0 |  The system shall support synonyms & antonyms |O|
+| 8.0 |  The system shall support idioms |O|
 
+
+### 3.2.4 Basic User Stories
+
+**As a Student:**
+- I want to register for an account so I can track my progress
+- I want to take quizzes appropriate for my level so I can learn effectively
+- I want to see my quiz scores so I can track my improvement
+- I want to progress through levels systematically so I build knowledge properly
+- I want to view available levels and lessons so I can choose what to study
+- I want to retake quizzes to improve my score
+
+**As a System:**
+- The system should validate user answers and calculate scores automatically
+- The system should store all user progress securely
+- The system should prevent unauthorized access to lessons
+- The system should have pre-loaded content (levels, lessons, questions) ready for users
 
 <a name="sp3.3"></a>
-### 3.2 Non-Functional Requirements 
+### 3.3 Non-Functional Requirements 
  
 | ID | Descrizione | Priorità |
 | --------------- | ----------- | ---------- | 
@@ -167,3 +182,25 @@ The increasing need for flexible, low-cost, and accessible English language lear
 | 3.0 | The database should be compatible with Python 3.x |M|
 | 4.0 | Data should be securely stored and protected against injection attacks |M|
 | 5.0 | The database design should allow for future web/mobile frontend integration |E|
+| 6.0 | User passwords should be hashed and salted |M|
+| 7.0 | The system should have basic error handling and logging |M|
+
+### 3.4 Basic API Requirements for MVP
+
+**Authentication Endpoints:**
+- POST /auth/register - Create new user account
+- POST /auth/login - User authentication
+- POST /auth/logout - User logout
+
+**Content Access Endpoints:**
+- GET /levels - Get all available levels
+- GET /levels/{level_id}/lessons - Get lessons for a specific level
+- GET /lessons/{lesson_id}/questions - Get questions for a lesson
+
+**Quiz Functionality:**
+- POST /quiz/start - Start a new quiz session
+- POST /quiz/submit - Submit quiz answers
+- GET /user/progress - Get user's current progress
+- GET /user/scores - Get user's quiz history
+
+**Note:** All content (levels, lessons, questions) will be pre-loaded in the database. No content creation API needed for MVP.
