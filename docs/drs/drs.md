@@ -131,7 +131,82 @@ Version | Data | Author(s)| Notes
     <summary> The architecture follows a simple three-tier model:
  <b> User → Python Application → MySQL Database </b>
     </summary>
-    <p>The system consists of a Python application layer that connects to a MySQL database. The user interacts through this layer to access the quizzes and submit answers. The database is used for persistent storage of all learning data. </p>
+    
+**Architecture Overview:**
+<p>The system implements a simplified 3-tier architecture optimized for backend operations:</p>
+
+**Tier 1 - Presentation Layer (Minimal):**
+<ul>
+    <li>Command-line interface or simple script execution</li>
+    <li>graphical user interface </li>
+    <li>Input/output through Python console or API calls</li>
+</ul>
+
+**Tier 2 - Application Layer (Python):**
+<ul>
+    <li><strong>Core Components:</strong>
+        <ul>
+            <li>Authentication Module (auth.py) - User registration, login, password hashing</li>
+            <li>Quiz Module (quiz.py) - Quiz session management, score calculation</li>
+            <li>Database Module (database.py) - Connection pooling, query execution</li>
+            <li>Models Module (models.py) - Data structures for all entities</li>
+        </ul>
+    </li>
+    <li><strong>Responsibilities:</strong>
+        <ul>
+            <li>Business logic implementation</li>
+            <li>Data validation and error handling</li>
+            <li>Session management</li>
+            <li>Security enforcement (authentication, authorization)</li>
+        </ul>
+    </li>
+</ul>
+
+**Tier 3 - Data Layer (MySQL):**
+<ul>
+    <li><strong>Database Components:</strong>
+        <ul>
+            <li>6 main tables: Users, Levels, Lessons, Questions, Options, StudentAttempts</li>
+            <li>Referential integrity through foreign keys</li>
+            <li>Indexes on frequently queried fields</li>
+        </ul>
+    </li>
+    <li><strong>Responsibilities:</strong>
+        <ul>
+            <li>Persistent data storage</li>
+            <li>Data integrity enforcement</li>
+            <li>Transaction management</li>
+            <li>Query optimization</li>
+        </ul>
+    </li>
+</ul>
+
+**Communication Flow:**
+<ol>
+    <li>User initiates action through Python script</li>
+    <li>Python application validates input and applies business rules</li>
+    <li>Application constructs parameterized SQL queries</li>
+    <li>mysql-connector-python executes queries on MySQL database</li>
+    <li>Database returns results to Python application</li>
+    <li>Application processes results and returns to user</li>
+</ol>
+
+**Security Measures:**
+<ul>
+    <li>Password hashing using bcrypt before storage</li>
+    <li>Parameterized queries to prevent SQL injection</li>
+    <li>Input validation at application layer</li>
+    <li>Session tokens for authenticated operations</li>
+    <li>Database user with minimum required privileges</li>
+</ul>
+
+**Deployment Architecture:**
+<ul>
+    <li>Single-server deployment (application and database on same machine)</li>
+    <li>Python 3.x runtime environment</li>
+    <li>MySQL 8.0 database server</li>
+    <li>Connection via localhost (no network exposure)</li>
+</ul>
 </details>
 
 ### <a name="interfaces"></a>  3.2 System Interfaces
@@ -274,10 +349,9 @@ Version | Data | Author(s)| Notes
 
 #### <a name="od"></a>  4.1.2 Object diagram
 <details> 
-    <summary> This may show an example where a <b>User</b> attempts a <b>Lesson</b> that contains <b>Questions</b> with <b>Options</b> .
+    <summary> Shows specific object instances during a quiz attempt
     </summary>
-    <p>Useful for visualizing the object instances and their relationships in runtime.</p>
-</details>
+    <p>The object diagram illustrates a snapshot of the system at runtime when a student is taking a quiz. It shows object instances such as a specific user (e.g., student123:User), connected to a current level (beginner:Level), attempting a lesson (greetings:Lesson) that contains multiple question objects with their associated option objects. This diagram demonstrates the actual object links during system execution.</p>
 
 #### <a name="dm"></a>  4.2 Dynamic Models
 <details> 
