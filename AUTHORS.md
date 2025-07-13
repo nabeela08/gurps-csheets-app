@@ -1,3 +1,2 @@
-**TODO : Please modify this file according to the following**
+**Contributors & Authors**
 
-Fill the document with the authors and the contact references

@@ -1,0 +1,378 @@
+/* WORDIAMO Custom Animations and Micro-interactions */
+
+/* Loading animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40%, 43% {
+        transform: translateY(-8px);
+    }
+    70% {
+        transform: translateY(-4px);
+    }
+    90% {
+        transform: translateY(-2px);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-2px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(2px);
+    }
+}
+
+@keyframes progressFill {
+    from {
+        width: 0%;
+    }
+    to {
+        width: var(--progress-width);
+    }
+}
+
+/* Page transition animations */
+.page-enter {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.page-enter-from-right {
+    animation: slideInFromRight 0.3s ease-out;
+}
+
+.page-enter-from-left {
+    animation: slideInFromLeft 0.3s ease-out;
+}
+
+/* Card animations */
+.card-enter {
+    animation: slideUp 0.4s ease-out;
+}
+
+.card-enter-delayed {
+    animation: slideUp 0.4s ease-out 0.1s both;
+}
+
+.card-hover {
+    transition: all 0.2s ease-out;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Button animations */
+.btn-hover {
+    transition: all 0.2s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-hover:hover::before {
+    left: 100%;
+}
+
+.btn-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-hover:active {
+    transform: translateY(0);
+}
+
+/* Loading spinner improvements */
+.spinner-bounce {
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.spinner-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Form input animations */
+.input-focus {
+    transition: all 0.3s ease-out;
+}
+
+.input-focus:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Progress bar animations */
+.progress-bar {
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    transition: width 0.8s ease-out;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.2) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 10px 10px;
+    animation: progressStripe 1s linear infinite;
+}
+
+@keyframes progressStripe {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 10px 0;
+    }
+}
+
+/* Modal animations */
+.modal-backdrop {
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+    animation: scaleIn 0.3s ease-out;
+}
+
+.modal-exit {
+    animation: fadeIn 0.2s ease-out reverse;
+}
+
+/* Toast/notification animations */
+.toast-enter {
+    animation: slideInFromRight 0.3s ease-out;
+}
+
+.toast-exit {
+    animation: slideInFromRight 0.3s ease-out reverse;
+}
+
+/* Quiz-specific animations */
+.question-enter {
+    animation: slideInFromRight 0.4s ease-out;
+}
+
+.option-hover {
+    transition: all 0.2s ease-out;
+}
+
+.option-hover:hover {
+    transform: translateX(4px);
+    background-color: rgba(102, 126, 234, 0.05);
+}
+
+.option-selected {
+    animation: scaleIn 0.2s ease-out;
+}
+
+.answer-correct {
+    animation: bounce 0.6s ease-out;
+}
+
+.answer-incorrect {
+    animation: shake 0.5s ease-out;
+}
+
+/* Achievement animations */
+.achievement-unlock {
+    animation: bounce 0.8s ease-out;
+}
+
+.achievement-glow {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    animation: pulse 2s infinite;
+}
+
+/* Responsive animations - reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Custom utility classes */
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+}
+
+.animate-bounce-subtle {
+    animation: bounce 0.6s ease-out;
+}
+
+.animate-pulse-slow {
+    animation: pulse 3s infinite;
+}
+
+/* Hover effects for interactive elements */
+.hover-lift {
+    transition: transform 0.2s ease-out;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+.hover-scale {
+    transition: transform 0.2s ease-out;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Focus improvements for accessibility */
+.focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Loading skeleton animations */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
