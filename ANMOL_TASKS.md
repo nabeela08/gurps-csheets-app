@@ -27,8 +27,8 @@
 
 ## Business Logic & Features
 - [x] 20. User Profile Management: Track current level and completed lessons
-- [ ] 22. Different Question Types: Implement fill-in-blank and error correction exercises
-- [ ] 23. Content Categorization: Add skill type classification (grammar/vocabulary etc)
+- [x] 22. Different Question Types: Implement fill-in-blank and error correction exercises
+- [x] 23. Content Categorization: Add skill type classification (grammar/vocabulary etc)
 - [ ] 24. Progress Tracking: Implement prerequisite checking and handle how users move from one level to the next.
 - [ ] 25. Quiz Retake System: Allow users to retake quizzes to improve scores
 - [x] 26. Score Calculation: Implement percentage-based scoring with passing thresholds

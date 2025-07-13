@@ -170,6 +170,13 @@ class Lesson:
         return [cls(**row) for row in results]
     
     @classmethod
+    def get_all(cls) -> List['Lesson']:
+        """Get all lessons"""
+        sql = "SELECT * FROM lessons ORDER BY level_id, lesson_order"
+        results = query(sql)
+        return [cls(**row) for row in results]
+    
+    @classmethod
     def get_by_id(cls, lesson_id: int) -> Optional['Lesson']:
         """Get lesson by ID"""
         sql = "SELECT * FROM lessons WHERE lesson_id = %s"
@@ -193,6 +200,38 @@ class Lesson:
         sql = "SELECT AVG(score) as avg_score FROM student_attempts WHERE lesson_id = %s"
         result = query(sql, (self.lesson_id,))
         return result[0]['avg_score'] if result and result[0]['avg_score'] else 0.0
+    
+    def get_skill_categories(self) -> Dict[str, int]:
+        """Get count of questions by skill type for this lesson"""
+        sql = """
+        SELECT question_type, COUNT(*) as count 
+        FROM questions 
+        WHERE lesson_id = %s 
+        GROUP BY question_type
+        """
+        results = query(sql, (self.lesson_id,))
+        return {row['question_type']: row['count'] for row in results}
+    
+    @classmethod
+    def get_by_skill_focus(cls, skill_type: str, level_id: int = None) -> List['Lesson']:
+        """Get lessons that focus on a specific skill type"""
+        if level_id:
+            sql = """
+            SELECT DISTINCT l.* FROM lessons l
+            JOIN questions q ON l.lesson_id = q.lesson_id
+            WHERE q.question_type = %s AND l.level_id = %s
+            ORDER BY l.lesson_order
+            """
+            results = query(sql, (skill_type, level_id))
+        else:
+            sql = """
+            SELECT DISTINCT l.* FROM lessons l
+            JOIN questions q ON l.lesson_id = q.lesson_id
+            WHERE q.question_type = %s
+            ORDER BY l.level_id, l.lesson_order
+            """
+            results = query(sql, (skill_type,))
+        return [cls(**row) for row in results]
 
 class Question:
     """Question model for quiz questions"""
@@ -238,6 +277,37 @@ class Question:
         sql = "SELECT is_correct FROM options WHERE option_id = %s AND question_id = %s"
         result = query(sql, (option_id, self.question_id))
         return result[0]['is_correct'] if result else False
+    
+    @classmethod
+    def get_by_type(cls, question_type: str) -> List['Question']:
+        """Get all questions by type"""
+        sql = "SELECT * FROM questions WHERE question_type = %s ORDER BY lesson_id, question_id"
+        results = query(sql, (question_type,))
+        return [cls(**row) for row in results]
+    
+    @classmethod
+    def get_type_statistics(cls) -> Dict[str, int]:
+        """Get count of questions by type"""
+        sql = """
+        SELECT question_type, COUNT(*) as count 
+        FROM questions 
+        GROUP BY question_type 
+        ORDER BY count DESC
+        """
+        results = query(sql)
+        return {row['question_type']: row['count'] for row in results}
+    
+    @classmethod
+    def get_difficulty_statistics(cls) -> Dict[str, int]:
+        """Get count of questions by difficulty"""
+        sql = """
+        SELECT difficulty_level, COUNT(*) as count 
+        FROM questions 
+        GROUP BY difficulty_level 
+        ORDER BY FIELD(difficulty_level, 'easy', 'medium', 'hard')
+        """
+        results = query(sql)
+        return {row['difficulty_level']: row['count'] for row in results}
 
 class Option:
     """Option model for question choices"""
@@ -322,3 +392,48 @@ class StudentAttempt:
     def is_passing_score(self, passing_threshold: float = 70.0) -> bool:
         """Check if score meets passing threshold"""
         return self.calculate_percentage() >= passing_threshold
+    
+    @classmethod
+    def get_performance_by_skill(cls, user_id: int) -> Dict[str, Dict[str, Any]]:
+        """Get user performance breakdown by skill type"""
+        sql = """
+        SELECT 
+            q.question_type,
+            COUNT(*) as total_questions,
+            SUM(CASE 
+                WHEN o.is_correct = TRUE 
+                AND EXISTS (
+                    SELECT 1 FROM options correct_opt 
+                    WHERE correct_opt.question_id = q.question_id 
+                    AND correct_opt.is_correct = TRUE
+                    AND correct_opt.option_id = ua.selected_option_id
+                ) 
+                THEN 1 ELSE 0 
+            END) as correct_answers,
+            AVG(sa.score) as avg_score,
+            COUNT(DISTINCT sa.lesson_id) as lessons_attempted
+        FROM student_attempts sa
+        JOIN lessons l ON sa.lesson_id = l.lesson_id
+        JOIN questions q ON l.lesson_id = q.lesson_id
+        LEFT JOIN user_answers ua ON sa.attempt_id = ua.attempt_id AND q.question_id = ua.question_id
+        LEFT JOIN options o ON ua.selected_option_id = o.option_id
+        WHERE sa.user_id = %s
+        GROUP BY q.question_type
+        """
+        results = query(sql, (user_id,))
+        
+        performance = {}
+        for row in results:
+            skill_type = row['question_type']
+            total = row['total_questions'] or 0
+            correct = row['correct_answers'] or 0
+            
+            performance[skill_type] = {
+                'total_questions': total,
+                'correct_answers': correct,
+                'accuracy_percentage': (correct / total * 100) if total > 0 else 0,
+                'average_score': row['avg_score'] or 0,
+                'lessons_attempted': row['lessons_attempted'] or 0
+            }
+        
+        return performance

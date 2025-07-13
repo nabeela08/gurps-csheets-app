@@ -43,7 +43,7 @@ CREATE TABLE questions (
     question_id INT AUTO_INCREMENT PRIMARY KEY,
     question_text TEXT NOT NULL,
     lesson_id INT NOT NULL,
-    question_type ENUM('vocabulary', 'grammar', 'sentence_formation', 'fill_in_blank', 'error_correction') DEFAULT 'vocabulary',
+    question_type ENUM('vocabulary', 'grammar', 'sentence_formation', 'fill_in_blank', 'error_correction', 'reading_comprehension') DEFAULT 'vocabulary',
     difficulty_level ENUM('easy', 'medium', 'hard') DEFAULT 'easy',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (lesson_id) REFERENCES lessons(lesson_id) ON DELETE CASCADE,

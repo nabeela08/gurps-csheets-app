@@ -10,13 +10,18 @@ from datetime import timedelta
 import logging
 
 # Import modules
-from ..auth import (
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from auth import (
     register_user, login_user, logout_user, token_required, 
     session_required, get_current_user, verify_token
 )
-from ..models import User, Level, Lesson, Question, Option, StudentAttempt
-from ..quiz import start_quiz, submit_answer, get_quiz_progress, get_quiz_history
-from ..database import get_db_manager
+from src.main.models import User, Level, Lesson, Question, Option, StudentAttempt
+from quiz import start_quiz, submit_answer, get_quiz_progress, get_quiz_history
+from src.main.database import get_db_manager
+from src.main.content_categorization import ContentCategorization
 
 def create_app(config=None):
     """Create and configure Flask application"""
@@ -356,6 +361,133 @@ def create_app(config=None):
             
         except Exception as e:
             return jsonify({'error': f'Failed to fetch scores: {str(e)}'}), 500
+    
+    # Content Categorization endpoints
+    @app.route('/content/categories', methods=['GET'])
+    def get_content_categories():
+        """Get all available skill categories"""
+        try:
+            categories = ContentCategorization.get_all_categories()
+            return jsonify({
+                'success': True,
+                'categories': categories
+            }), 200
+        except Exception as e:
+            return jsonify({'error': f'Failed to fetch categories: {str(e)}'}), 500
+    
+    @app.route('/content/overview', methods=['GET'])
+    def get_content_overview():
+        """Get overview of all content by categories"""
+        try:
+            overview = ContentCategorization.get_content_overview()
+            return jsonify({
+                'success': True,
+                'overview': overview
+            }), 200
+        except Exception as e:
+            return jsonify({'error': f'Failed to fetch content overview: {str(e)}'}), 500
+    
+    @app.route('/questions/by-type/<string:question_type>', methods=['GET'])
+    def get_questions_by_type(question_type):
+        """Get questions by skill type"""
+        try:
+            questions = Question.get_by_type(question_type)
+            questions_data = []
+            
+            for question in questions:
+                options = question.get_options()
+                questions_data.append({
+                    'question_id': question.question_id,
+                    'question_text': question.question_text,
+                    'lesson_id': question.lesson_id,
+                    'question_type': question.question_type,
+                    'difficulty_level': question.difficulty_level,
+                    'options': [
+                        {
+                            'option_id': option.option_id,
+                            'option_text': option.option_text,
+                            'is_correct': option.is_correct,
+                            'option_order': option.option_order
+                        }
+                        for option in sorted(options, key=lambda x: x.option_order)
+                    ]
+                })
+            
+            return jsonify({
+                'success': True,
+                'question_type': question_type,
+                'questions': questions_data,
+                'total_count': len(questions_data)
+            }), 200
+            
+        except Exception as e:
+            return jsonify({'error': f'Failed to fetch questions by type: {str(e)}'}), 500
+    
+    @app.route('/lessons/by-skill/<string:skill_type>', methods=['GET'])
+    def get_lessons_by_skill(skill_type):
+        """Get lessons that focus on a specific skill type"""
+        try:
+            level_id = request.args.get('level_id', type=int)
+            lessons = ContentCategorization.get_lessons_by_skill(skill_type, level_id)
+            
+            return jsonify({
+                'success': True,
+                'skill_type': skill_type,
+                'level_id': level_id,
+                'lessons': lessons,
+                'total_count': len(lessons)
+            }), 200
+            
+        except Exception as e:
+            return jsonify({'error': f'Failed to fetch lessons by skill: {str(e)}'}), 500
+    
+    @app.route('/user/progress/by-category', methods=['GET'])
+    @token_required
+    def user_progress_by_category(current_user):
+        """Get user performance breakdown by skill category"""
+        try:
+            analysis = ContentCategorization.get_user_skill_analysis(current_user.user_id)
+            
+            return jsonify({
+                'success': True,
+                'skill_analysis': analysis
+            }), 200
+            
+        except Exception as e:
+            return jsonify({'error': f'Failed to fetch skill analysis: {str(e)}'}), 500
+    
+    @app.route('/levels/<int:level_id>/skills', methods=['GET'])
+    def get_level_skill_distribution(level_id):
+        """Get skill distribution for a specific level"""
+        try:
+            distribution = ContentCategorization.get_level_skill_distribution(level_id)
+            
+            return jsonify({
+                'success': True,
+                'distribution': distribution
+            }), 200
+            
+        except Exception as e:
+            return jsonify({'error': f'Failed to fetch level skill distribution: {str(e)}'}), 500
+    
+    @app.route('/content/statistics', methods=['GET'])
+    def get_content_statistics():
+        """Get question and difficulty statistics"""
+        try:
+            question_stats = Question.get_type_statistics()
+            difficulty_stats = Question.get_difficulty_statistics()
+            
+            return jsonify({
+                'success': True,
+                'statistics': {
+                    'question_types': question_stats,
+                    'difficulty_levels': difficulty_stats,
+                    'total_questions': sum(question_stats.values())
+                }
+            }), 200
+            
+        except Exception as e:
+            return jsonify({'error': f'Failed to fetch statistics: {str(e)}'}), 500
     
     return app
 
