@@ -1,10 +1,10 @@
 # ANMOL'S TASKS - English Learning Platform
 
 ## Database & Setup Tasks
-- [ ] 1. Setup the Database
-- [ ] 2. Designing Schema: Create 6 tables (Users, Levels, Lessons, Questions, Options, StudentAttempts) 
-- [ ] 3. Add Sample Data: Insert test data (3+ levels, 10+ lessons, 50+ questions and with 4 options each)
-- [ ] 4. Set Project Structure: Create Python project with structured folder
+- [x] 1. Setup the Database
+- [x] 2. Designing Schema: Create 6 tables (Users, Levels, Lessons, Questions, Options, StudentAttempts) 
+- [x] 3. Add Data: Insert test data (3+ levels, 10+ lessons, 50+ questions and with 4 options each)
+- [x] 4. Set Project Structure: Create Python project with structured folder
 
 ## Core Backend Modules
 - [ ] 5. Database Module: Create a database.py file that handles connecting to the database.
