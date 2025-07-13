@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDIAMO - Login</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#667eea',
+                        'secondary': '#764ba2',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/animations.css">
+</head>
+<body class="font-inter bg-gradient-to-br from-primary to-secondary min-h-screen">
+    <div class="min-h-screen flex flex-col justify-center items-center p-5">
+        <!-- Header -->
+        <header class="text-center mb-8 animate-fade-in">
+            <div class="mb-2">
+                <h1 class="text-4xl font-bold text-white mb-2 drop-shadow-sm">📚 WORDIAMO</h1>
+                <p class="text-white/90 text-lg font-light">English Learning Platform</p>
+            </div>
+        </header>
+
+        <!-- Login Form -->
+        <main class="w-full max-w-md">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 w-full animate-slide-up">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-2">Welcome</h2>
+                    <p class="text-gray-600 text-sm">Sign in to continue your English learning journey</p>
+                </div>
+
+                <form id="loginForm" class="space-y-6">
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required 
+                            placeholder="Enter your email"
+                            autocomplete="email"
+                            class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:bg-white transition-all duration-300 placeholder-gray-400 input-focus"
+                        >
+                        <span class="text-red-500 text-xs mt-1 hidden" id="emailError"></span>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                required 
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                class="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary focus:bg-white transition-all duration-300 placeholder-gray-400 pr-12 input-focus"
+                            >
+                            <button type="button" id="togglePassword" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 text-xl">
+                                👁️
+                            </button>
+                        </div>
+                        <span class="text-red-500 text-xs mt-1 hidden" id="passwordError"></span>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="flex items-center justify-between text-sm">
+                        <label class="flex items-center cursor-pointer text-gray-600">
+                            <input type="checkbox" id="rememberMe" name="rememberMe" class="sr-only">
+                            <div class="relative">
+                                <div class="w-5 h-5 bg-white border-2 border-gray-300 rounded transition-all duration-200 checked:bg-primary checked:border-primary"></div>
+                                <svg class="w-3 h-3 text-white absolute top-0.5 left-0.5 hidden check-icon" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="loginBtn" class="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 rounded-lg font-semibold hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none btn-hover">
+                        <span class="btn-text">Sign In</span>
+                        <span id="loginLoading" class="hidden items-center justify-center">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Signing in...
+                        </span>
+                    </button>
+
+                    <!-- Error/Success Messages -->
+                    <div id="formError" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+                    <div id="formSuccess" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm"></div>
+                </form>
+
+                <!-- Register Link -->
+                <div class="mt-8 pt-6 border-t border-gray-200 text-center">
+                    <p class="text-gray-600 text-sm">
+                        Don't have an account? 
+                        <a href="register.html" class="text-primary font-semibold hover:text-secondary">Create Account</a>
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom CSS for checkbox -->
+    <style>
+        #rememberMe:checked + div > div {
+            @apply bg-primary border-primary;
+        }
+        #rememberMe:checked + div .check-icon {
+            @apply block;
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script src="../js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDIAMO - Profile</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#667eea',
+                        'secondary': '#764ba2',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/animations.css">
+</head>
+<body class="font-inter bg-gray-50 min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Left side -->
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.html" class="text-gray-500 hover:text-gray-700 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                    </a>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">My Profile</h1>
+                        <p class="text-sm text-gray-500">Manage your account and preferences</p>
+                    </div>
+                </div>
+                
+                <!-- Right side -->
+                <div class="flex items-center space-x-4">
+                    <button id="saveProfileBtn" class="hidden bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="flex items-center justify-center min-h-[calc(100vh-4rem)]">
+        <div class="text-center">
+            <svg class="animate-spin h-12 w-12 text-primary mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-600">Loading your profile...</p>
+        </div>
+    </div>
+
+    <!-- Profile Content -->
+    <main id="profileContent" class="hidden max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Profile Header -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-8 mb-8">
+            <div class="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
+                <!-- Avatar -->
+                <div class="relative">
+                    <div class="w-32 h-32 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center text-4xl font-bold text-white" id="userAvatar">
+                        U
+                    </div>
+                    <button class="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- User Info -->
+                <div class="flex-1 text-center md:text-left">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2" id="userName">Loading...</h2>
+                    <p class="text-lg text-gray-600 mb-4" id="userEmail">Loading...</p>
+                    
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="text-2xl font-bold text-primary" id="totalQuizzes">0</div>
+                            <div class="text-sm text-gray-600">Quizzes Taken</div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="text-2xl font-bold text-green-600" id="averageScore">0%</div>
+                            <div class="text-sm text-gray-600">Average Score</div>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="text-2xl font-bold text-blue-600" id="currentStreak">0</div>
+                            <div class="text-sm text-gray-600">Day Streak</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tabs -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-200 mb-8">
+            <!-- Tab Navigation -->
+            <div class="border-b border-gray-200">
+                <nav class="flex space-x-8 px-6">
+                    <button class="tab-btn active py-4 px-2 border-b-2 border-primary text-primary font-medium text-sm" data-tab="personal">
+                        Personal Information
+                    </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="preferences">
+                        Learning Preferences
+                    </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="progress">
+                        Progress & Statistics
+                    </button>
+                    <button class="tab-btn py-4 px-2 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm" data-tab="security">
+                        Security
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="p-6">
+                <!-- Personal Information Tab -->
+                <div id="personalTab" class="tab-content">
+                    <form id="personalInfoForm" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Username -->
+                            <div>
+                                <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                                <input type="text" id="username" name="username" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter your username">
+                            </div>
+                            
+                            <!-- Email -->
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter your email">
+                            </div>
+                            
+                            
+                            <!-- Current Level -->
+                            <div>
+                                <label for="currentLevel" class="block text-sm font-medium text-gray-700 mb-2">Current English Level</label>
+                                <select id="currentLevel" name="currentLevel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    <option value="beginner">Beginner</option>
+                                    <option value="elementary">Elementary</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="upper-intermediate">Upper Intermediate</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Bio -->
+                        <div>
+                            <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">About Me</label>
+                            <textarea id="bio" name="bio" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Tell us about yourself and your learning goals..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Learning Preferences Tab -->
+                <div id="preferencesTab" class="tab-content hidden">
+                    <form id="preferencesForm" class="space-y-6">
+                        <!-- Study Goals -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Learning Goals</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" name="goals" value="vocabulary" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    <span class="ml-3 text-sm text-gray-700">Expand Vocabulary</span>
+                                </label>
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" name="goals" value="grammar" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    <span class="ml-3 text-sm text-gray-700">Improve Grammar</span>
+                                </label>
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" name="goals" value="speaking" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    <span class="ml-3 text-sm text-gray-700">Speaking Practice</span>
+                                </label>
+                                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                    <input type="checkbox" name="goals" value="writing" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                    <span class="ml-3 text-sm text-gray-700">Writing Skills</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Study Time Preference -->
+                        <div>
+                            <label for="studyTime" class="block text-sm font-medium text-gray-700 mb-2">Preferred Study Time</label>
+                            <select id="studyTime" name="studyTime" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="morning">Morning (6-12 PM)</option>
+                                <option value="afternoon">Afternoon (12-6 PM)</option>
+                                <option value="evening">Evening (6-10 PM)</option>
+                                <option value="night">Night (10 PM-6 AM)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Daily Goal -->
+                        <div>
+                            <label for="dailyGoal" class="block text-sm font-medium text-gray-700 mb-2">Daily Learning Goal</label>
+                            <select id="dailyGoal" name="dailyGoal" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="15">15 minutes per day</option>
+                                <option value="30">30 minutes per day</option>
+                                <option value="45">45 minutes per day</option>
+                                <option value="60">1 hour per day</option>
+                                <option value="90">1.5 hours per day</option>
+                                <option value="120">2+ hours per day</option>
+                            </select>
+                        </div>
+
+                        <!-- Notifications -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Notification Preferences</label>
+                            <div class="space-y-3">
+                                <label class="flex items-center justify-between p-3 border border-gray-300 rounded-lg">
+                                    <span class="text-sm text-gray-700">Daily study reminders</span>
+                                    <input type="checkbox" name="notifications" value="daily" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                </label>
+                                <label class="flex items-center justify-between p-3 border border-gray-300 rounded-lg">
+                                    <span class="text-sm text-gray-700">Weekly progress reports</span>
+                                    <input type="checkbox" name="notifications" value="weekly" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                </label>
+                                <label class="flex items-center justify-between p-3 border border-gray-300 rounded-lg">
+                                    <span class="text-sm text-gray-700">Achievement notifications</span>
+                                    <input type="checkbox" name="notifications" value="achievements" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Progress & Statistics Tab -->
+                <div id="progressTab" class="tab-content hidden">
+                    <!-- Learning Progress -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Learning Progress</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Overall Progress -->
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h4 class="font-medium text-gray-900 mb-4">Overall Progress</h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span class="text-gray-600">Vocabulary</span>
+                                            <span class="font-medium" id="vocabProgress">0%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 0%" id="vocabBar"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span class="text-gray-600">Grammar</span>
+                                            <span class="font-medium" id="grammarProgress">0%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-green-500 h-2 rounded-full" style="width: 0%" id="grammarBar"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span class="text-gray-600">Speaking</span>
+                                            <span class="font-medium" id="speakingProgress">0%</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-purple-500 h-2 rounded-full" style="width: 0%" id="speakingBar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Recent Activity -->
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h4 class="font-medium text-gray-900 mb-4">Recent Activity</h4>
+                                <div id="recentActivities" class="space-y-3">
+                                    <!-- Activities will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Achievements -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Achievements</h3>
+                        <div id="achievementsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <!-- Achievements will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Tab -->
+                <div id="securityTab" class="tab-content hidden">
+                    <form id="securityForm" class="space-y-6">
+                        <!-- Change Password -->
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Change Password</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="currentPassword" class="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                                    <input type="password" id="currentPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter current password">
+                                </div>
+                                <div>
+                                    <label for="newPassword" class="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                                    <input type="password" id="newPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter new password">
+                                </div>
+                                <div>
+                                    <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                                    <input type="password" id="confirmPassword" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Confirm new password">
+                                </div>
+                                <button type="button" id="changePasswordBtn" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                                    Update Password
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Account Actions -->
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-red-900 mb-4">Danger Zone</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-medium text-red-900 mb-2">Export Data</h4>
+                                    <p class="text-sm text-red-700 mb-3">Download all your learning data and progress.</p>
+                                    <button type="button" class="bg-red-100 text-red-700 px-4 py-2 rounded-lg hover:bg-red-200 transition-colors">
+                                        Export My Data
+                                    </button>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-red-900 mb-2">Delete Account</h4>
+                                    <p class="text-sm text-red-700 mb-3">Permanently delete your account and all associated data.</p>
+                                    <button type="button" id="deleteAccountBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                                        Delete Account
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success/Error Messages -->
+    <div id="messageContainer" class="fixed top-4 right-4 z-50"></div>
+
+    <!-- JavaScript -->
+    <script src="../js/profile.js"></script>
+</body>
+</html>
