@@ -1,25 +1,25 @@
 # NABEELA'S FRONTEND TASKS 
 
 ## HTML Pages & User Interface
-- [ ] 1. Login Page
-- [ ] 2. Registration Page
-- [ ] 3. Dashboard Page: Display user's level and score
-- [ ] 4. Quiz Interface: Design page with questions, multiple choice options, and a timer.
-- [ ] 5. Results Page: After a quiz, display detailed results showing which answers were right or wrong.
-- [ ] 6. Profile Page: Allow users to view and update their profile information like name, email etc.
-- [ ] 7. Navigation System: Add a navigation bar across all pages.
+- [x] 1. Login Page
+- [x] 2. Registration Page
+- [x] 3. Dashboard Page: Display user's level and score
+- [x] 4. Quiz Interface: Design page with questions, multiple choice options, and a timer.
+- [x] 5. Results Page: After a quiz, display detailed results showing which answers were right or wrong.
+- [x] 6. Profile Page: Allow users to view and update their profile information like name, email etc.
+- [x] 7. Navigation System: Add a navigation bar across all pages.
 
 ## Styling & Design
-- [ ] 8. CSS Styling
-- [ ] 9. Mobile Responsiveness
-- [ ] 10. User Experience
+- [x] 8. CSS Styling
+- [x] 9. Mobile Responsiveness
+- [x] 10. User Experience
 
 ## Frontend Logic
-- [ ] 11. Frontend Scripts: Write JavaScript to handle API calls, form validation, and dynamic content updates
-- [ ] 12. Form Validation: Make sure all user input (like emails, passwords, etc.) is checked on the client side before sending it to the server.
-- [ ] 13. API Integration: Connect frontend to the backend using API endpoints.
-- [ ] 14. Session Management: Keep track of whether the user is logged in or not.
-- [ ] 15. Error Handling: Display user-friendly error messages from API responses
+- [x] 11. Frontend Scripts: Write JavaScript to handle API calls, form validation, and dynamic content updates
+- [x] 12. Form Validation: Make sure all user input (like emails, passwords, etc.) is checked on the client side before sending it to the server.
+- [x] 13. API Integration: Connect frontend to the backend using API endpoints.
+- [x] 14. Session Management: Keep track of whether the user is logged in or not.
+- [x] 15. Error Handling: Display user-friendly error messages from API responses
 
 ## Testing
 - [ ] 16. Frontend Tests: Test user interface components and user workflows
