@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 from functools import wraps
 from flask import request, jsonify, session
-from ..models import User
+from src.main.models import User
 
 # Configuration
 SECRET_KEY = os.getenv('SECRET_KEY', 'wordiamo_secret_key_2024')
@@ -59,10 +59,10 @@ def register_user(username: str, email: str, password: str) -> Dict[str, Any]:
         return {'success': False, 'message': 'Password must be at least 6 characters'}
     
     # Check if user already exists
-    if User.get_by_username(username):
+    if User.by_username(username):
         return {'success': False, 'message': 'Username already exists'}
     
-    if User.get_by_email(email):
+    if User.by_email(email):
         return {'success': False, 'message': 'Email already registered'}
     
     try:
@@ -93,7 +93,7 @@ def login_user(identifier: str, password: str) -> Dict[str, Any]:
         return {'success': False, 'message': 'Email/username and password required'}
     
     # Try to find user by email or username
-    user = User.get_by_email(identifier) or User.get_by_username(identifier)
+    user = User.by_email(identifier) or User.by_username(identifier)
     
     if not user:
         return {'success': False, 'message': 'Invalid credentials'}
@@ -132,11 +132,11 @@ def logout_user(token: str) -> Dict[str, Any]:
     except Exception as e:
         return {'success': False, 'message': f'Logout failed: {str(e)}'}
 
-def get_current_user(token: str) -> Optional[User]:
+def current_user(token: str) -> Optional[User]:
     """Get current user from token"""
     payload = verify_token(token)
     if payload:
-        return User.get_by_id(payload['user_id'])
+        return User.by_id(payload['user_id'])
     return None
 
 def token_required(f):
@@ -162,7 +162,7 @@ def token_required(f):
             return jsonify({'message': 'Token is invalid or expired'}), 401
         
         # Get current user
-        current_user = User.get_by_id(payload['user_id'])
+        current_user = User.by_id(payload['user_id'])
         if not current_user:
             return jsonify({'message': 'User not found'}), 401
         
@@ -177,7 +177,7 @@ def session_required(f):
         if 'user_id' not in session:
             return jsonify({'message': 'Login required'}), 401
         
-        current_user = User.get_by_id(session['user_id'])
+        current_user = User.by_id(session['user_id'])
         if not current_user:
             session.clear()
             return jsonify({'message': 'User not found'}), 401

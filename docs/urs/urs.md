@@ -185,22 +185,40 @@ The increasing need for flexible, low-cost, and accessible English language lear
 | 6.0 | User passwords should be hashed and salted |M|
 | 7.0 | The system should have basic error handling and logging |M|
 
-### 3.4 Basic API Requirements for MVP
+### 3.4 Complete API Implementation 
 
 **Authentication Endpoints:**
-- POST /auth/register - Create new user account
-- POST /auth/login - User authentication
-- POST /auth/logout - User logout
+-  POST /auth/register - Create new user account with validation
+-  POST /auth/login - JWT-based user authentication
+-  POST /auth/logout - Secure session termination
 
 **Content Access Endpoints:**
-- GET /levels - Get all available levels
+-  GET /levels - Get all available levels with descriptions
+-  GET /levels/{level_id} - Get specific level details
 - GET /levels/{level_id}/lessons - Get lessons for a specific level
-- GET /lessons/{lesson_id}/questions - Get questions for a lesson
+-  GET /lessons/{lesson_id}/questions - Get questions with options for a lesson
+-  GET /content/categories - Content categorization system
+-  GET /questions/by-type/{type} - Filter questions by type (vocabulary/grammar)
+-  GET /lessons/by-skill/{skill} - Filter lessons by skill type
 
 **Quiz Functionality:**
-- POST /quiz/start - Start a new quiz session
-- POST /quiz/submit - Submit quiz answers
-- GET /user/progress - Get user's current progress
-- GET /user/scores - Get user's quiz history
+-  POST /quiz/start - Start a new quiz session with lesson selection
+-  POST /quiz/submit - Submit quiz answers with real-time scoring
+-  POST /quiz/check-answer - Validate individual answers during quiz
+-  GET /lesson/access-check/{id} - Check level prerequisites before quiz access
 
-**Note:** All content (levels, lessons, questions) will be pre-loaded in the database. No content creation API needed for MVP.
+**User Management:**
+-  GET /user/progress - Comprehensive progress analytics with completion percentages
+-  GET /user/scores - Complete quiz history with detailed statistics
+-  GET /user/profile - User profile with current level and statistics
+-  PUT /user/profile - Update user profile information
+-  POST /user/change-password - Secure password change functionality
+-  DELETE /user/account - Account deletion capability
+
+**Project Deliverables:**
+- Complete source code repository
+- Database schema and sample data
+- API documentation through code
+- User interface documentation
+- Installation and setup instructions
+- Requirements traceability documentation

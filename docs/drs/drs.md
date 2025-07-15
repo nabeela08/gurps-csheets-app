@@ -97,13 +97,39 @@ Version | Data | Author(s)| Notes
 
 ### <a name="tech"></a> 2.2 Technologies used
 
+
 <details> 
     <summary> Description of the overall architecture. </summary>
-    <ul> <li> Database: MySQL 8.0 </li>
-         <li> Programming Language: Python 3.x </li>
-        <li> Library: mysql-connector-python </li>
-        <li> Diagram Tool: dbdiagram.io (for ERD visualization) </li>
-        <li> Version Control: GitHub for code and documentation tracking </li>
+
+    
+**Backend Technologies:**
+    <ul> 
+        <li>Database: MySQL 8.0 </li>
+        <li>Programming Language:Python 3.12</li>
+        <li>Web Framework:Flask 2.3.3 with RESTful API design</li>
+        <li>Database Connector:mysql-connector-python 8.0.33</li>
+        <li>Authentication:PyJWT 2.8.0 for token-based auth</li>
+        <li>Password Security:bcrypt 4.0.1 for hashing</li>
+        <li>CORS Support:Flask-CORS 4.0.0</li>
+    </ul>
+
+**Frontend Technologies:**
+    <ul>
+        <li>Markup:HTML5 with semantic structure</li>
+        <li>Styling:Tailwind CSS 3.x via CDN</li>
+        <li>JavaScript:Vanilla ES6+ with modern features</li>
+        <li>Fonts:Google Fonts (Inter family)</li>
+        <li>Icons: SVG-based iconography</li>
+        <li>Animations: Custom CSS animations</li>
+    </ul>
+
+
+**Architecture Patterns:**
+    <ul>
+        <li>Design Pattern: MVC (Model-View-Controller)</li>
+        <li>API Design: RESTful services with JSON responses</li>
+        <li>Authentication:JWT stateless authentication</li>
+        <li>Database: Normalized relational schema</li>
     </ul>
 </details>
 
@@ -214,9 +240,43 @@ Version | Data | Author(s)| Notes
 
 ### <a name="interfaces"></a>  3.2 System Interfaces
 <details> 
-    <summary> The Python application interacts with MySQL using mysql-connector-python.
+    <summary> Complete web-based interface with RESTful API backend integration
     </summary>
-    <p>There are no external APIs or frontend interfaces in the scope of this version. All actions like creating users, inserting questions, or retrieving quiz data occur through Python scripts. </p>
+    
+**Frontend-Backend Communication:**
+    <ul>
+        <li>Web Interface: Professional HTML/CSS/JavaScript frontend with responsive design</li>
+        <li>API Integration: RESTful HTTP API calls using Fetch API</li>
+        <li>Authentication: JWT token-based session management</li>
+        <li>Data Format:JSON for all API request/response payloads</li>
+        <li>Error Handling:Standardized error responses with user-friendly messages</li>
+    </ul>
+
+**Backend-Database Communication:**
+    <ul>
+        <li>Database Driver: mysql-connector-python with connection pooling</li>
+        <li>Query Management:Parameterized queries for security</li>
+        <li>Transaction Support:ACID compliance for data integrity</li>
+    </ul>
+
+**User Interface Components:**
+    <ul>
+        <li>Landing Page:Professional welcome interface with navigation</li>
+        <li>Authentication:Login and registration forms with validation</li>
+        <li>Dashboard: User progress overview and lesson navigation</li>
+        <li>Quiz Interface:Interactive questions with real-time feedback</li>
+        <li>Profile Management:User settings and progress tracking</li>
+        <li>Results Display:Detailed quiz results and analytics</li>
+    </ul>
+
+**API Endpoints Implementation:**
+    <ul>
+        <li>REST Architecture: 25+ endpoints following RESTful design principles</li>
+        <li>HTTP Methods: GET, POST, PUT, DELETE appropriately used</li>
+        <li>Status Codes: Proper HTTP status codes for all responses</li>
+        <li>Content Negotiation: JSON content type for data exchange</li>
+        <li>CORS Support:Cross-origin requests enabled for frontend</li>
+    </ul>
 </details>
 
 ### <a name="data"></a>  3.3 System Data
@@ -289,25 +349,25 @@ Version | Data | Author(s)| Notes
         <li><strong>User</strong>
             <ul>
                 <li>Attributes: user_id (PK), username, email, password_hash, current_level_id (FK), created_at, updated_at,</li>
-                <li>Methods: register(), authenticate(), get_profile(), update_profile(), get_progress(), get_attempts()</li>
+                <li>Methods: register(), authenticate(), profile(), set_profile(), progress(), attempts()</li>
             </ul>
         </li>
         <li><strong>Level</strong>
             <ul>
                 <li>Attributes: level_id (PK), level_name, level_description, level_order, created_at</li>
-                <li>Methods: get_lessons(), get_lesson_count()</li>
+                <li>Methods: lessons(), lesson_count()</li>
             </ul>
         </li>
         <li><strong>Lesson</strong>
             <ul>
                 <li>Attributes: lesson_id (PK), lesson_name, lesson_description, level_id (FK), lesson_order, estimated_time_minutes, created_at</li>
-                <li>Methods: get_questions(), get_question_count(), get_attempts(), get_average_score()</li>
+                <li>Methods: questions(), question_count(), attempts(), average_score()</li>
             </ul>
         </li>
         <li><strong>Question</strong>
             <ul>
                 <li>Attributes: question_id (PK), question_text, lesson_id (FK), question_type, difficulty_level, created_at</li>
-                <li>Methods: get_options(), get_correct_options(), validate_answer()</li>
+                <li>Methods: options(), correct_options(), validate_answer()</li>
             </ul>
         </li>
         <li><strong>Option</strong>
@@ -319,7 +379,7 @@ Version | Data | Author(s)| Notes
         <li><strong>StudentAttempts</strong>
             <ul>
                 <li>Attributes: attempt_id (PK), user_id (FK), lesson_id (FK), score, total_questions, correct_answers, attempt_date, completion_time_minutes</li>
-                <li>Methods: calculate_percentage(), is_passing_score(), get_completion_time()</li>
+                <li>Methods: calculate_percentage(), is_passing_score(), completion_time()</li>
             </ul>
         </li>
     </ul>
@@ -377,20 +437,105 @@ Version | Data | Author(s)| Notes
 
 ### <a name="python-impl"></a>  5.1 Python Implementation
 <details>
-    <summary>Core Python modules and project structure</summary>
+    <summary>Complete Flask-based implementation with modern architecture</summary>
+    
+**Core Application Structure:**
     <ul>
-        <li><strong>main.py</strong> - Entry point for the application</li>
-        <li><strong>database.py</strong> - MySQL connection and query functions</li>
-        <li><strong>auth.py</strong> - User authentication and session management</li>
-        <li><strong>quiz.py</strong> - Quiz logic and score calculation</li>
-        <li><strong>models.py</strong> - Data models for User, Level, Lesson, Question</li>
-        <li><strong>utils.py</strong> - Helper functions and utilities</li>
+        <li>main.py - Flask application entry point with server configuration</li>
+        <li>app/app.py - Main Flask application with 25+ RESTful API endpoints</li>
+        <li>auth/auth.py - JWT-based authentication with bcrypt password hashing</li>
+        <li>quiz/quiz.py - Advanced quiz logic with real-time scoring</li>
+        <li>src/main/models/models.py- ORM-style data models for all entities</li>
+        <li>src/main/database/database.py- Connection pooling and query management</li>
+        <li>src/main/content_categorization.py - Content organization utilities</li>
+    </ul>
+
+**Frontend Implementation:**
+    <ul>
+        <li>index.html - Professional landing page with Tailwind CSS</li>
+        <li>pages/- Complete user interface (login, register, dashboard, quiz, profile, results)</li>
+        <li>js/- Interactive JavaScript modules for each page functionality</li>
+        <li>css/- Custom styling and animations</li>
+    </ul>
+
+**Database Schema:**
+    <ul>
+        <li>database/schema.sql- Complete MySQL schema with foreign key constraints</li>
+        <li>database/sample_data.sql - 30 lessons with 150 questions and 600 options</li>
+        <li>setup_database.py- Automated database initialization</li>
     </ul>
 </details>
 
 ### <a name="db-connection"></a>  5.2 Database Connection
 <details>
+    <summary>Production-ready MySQL integration with connection pooling</summary>
+    
+**Connection Management:**
+    <ul>
+        <li>Connection Pooling:Efficient resource management with mysql-connector-python</li>
+        <li>Error Handling: Comprehensive database error handling and logging</li>
+        <li>Security:Parameterized queries preventing SQL injection attacks</li>
+    </ul>
+
+**Database Configuration:**
+    <ul>
+        <li>Host:localhost (configurable)</li>
+        <li>Database:english_learning_db</li>
+        <li>Tables: 7 tables with normalized schema</li>
+        <li>Data Volume:3 levels, 30 lessons, 150 questions, 600 options</li>
+    </ul>
+</details>
 
 ### <a name="core-functions"></a>  5.3 Core Functions
 <details>
+    <summary>Complete API implementation with 25+ endpoints</summary>
+    
+**Authentication Endpoints:**
+    <ul>
+        <li>POST /auth/register - User registration with validation</li>
+        <li>POST /auth/login - JWT-based authentication</li>
+        <li>POST /auth/logout- Session termination</li>
+    </ul>
+
+**Content Management Endpoints:**
+    <ul>
+        <li>GET /levels - Retrieve all learning levels</li>
+        <li>GET /levels/{id}/lessons - Get lessons for specific level</li>
+        <li>GET /lessons/{id}/questions - Fetch quiz questions</li>
+        <li>GET /content/categories - Content categorization</li>
+        <li>GET /questions/by-type/{type}- Filter by question type</li>
+    </ul>
+
+**Quiz System Endpoints:**
+    <ul>
+        <li>POST /quiz/start- Initialize quiz session</li>
+        <li>POST /quiz/submit- Submit answers with real-time scoring</li>
+        <li>POST /quiz/check-answer - Validate individual answers</li>
+        <li>GET /lesson/access-check/{id} - Level prerequisite validation</li>
+    </ul>
+
+**User Progress Endpoints:**
+    <ul>
+        <li>GET /user/progress - Comprehensive progress analytics</li>
+        <li>GET /user/scores - Quiz history and statistics</li>
+        <li>GET /user/profile - User profile management</li>
+        <li>PUT /user/profile- Profile updates</li>
+        <li>POST /user/change-password - Secure password changes</li>
+    </ul>
+
+## <a name="implementation-summary"></a>  6 Implementation Summary
+<details>
+    <summary>Complete feature implementation exceeding original specifications</summary>
+    
+**Delivered Components:**
+    <ul>
+        <li> <strong>Complete Database:</strong> 7 tables, 150 questions, 30 lessons</li>
+        <li><strong>Full Backend API:</strong> 25+ RESTful endpoints</li>
+        <li><strong>Professional Frontend:</strong> 7 responsive pages with modern UI</li>
+        <li><strong>Advanced Authentication:</strong> JWT tokens, bcrypt hashing</li>
+        <li><strong>Real-time Quiz System:</strong> Interactive questions with immediate feedback</li>
+        <li><strong>Progress Analytics:</strong> Comprehensive user progress tracking</li>
+        <li><strong>Security Features:</strong> SQL injection prevention, input validation</li>
+    </ul>
+
 </details>

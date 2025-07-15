@@ -51,28 +51,28 @@ class ContentCategorization:
     }
     
     @classmethod
-    def get_all_categories(cls) -> Dict[str, Dict[str, Any]]:
+    def all_categories(cls) -> Dict[str, Dict[str, Any]]:
         """Get all available skill categories with metadata"""
         return cls.SKILL_CATEGORIES
     
     @classmethod
-    def get_category_info(cls, category_id: str) -> Optional[Dict[str, Any]]:
+    def category_info(cls, category_id: str) -> Optional[Dict[str, Any]]:
         """Get information for a specific category"""
         return cls.SKILL_CATEGORIES.get(category_id)
     
     @classmethod
-    def get_content_overview(cls) -> Dict[str, Any]:
+    def content_overview(cls) -> Dict[str, Any]:
         """Get overview of all content by categories"""
         # Get question statistics by type
-        question_stats = Question.get_type_statistics()
+        question_stats = Question.type_statistics()
         
         # Get difficulty distribution
-        difficulty_stats = Question.get_difficulty_statistics()
+        difficulty_stats = Question.difficulty_statistics()
         
         # Get total counts
         total_questions = sum(question_stats.values())
-        total_lessons = len(Lesson.get_all())
-        total_levels = len(Level.get_all())
+        total_lessons = len(Lesson.all())
+        total_levels = len(Level.all())
         
         # Build category overview
         categories_overview = {}
@@ -93,13 +93,13 @@ class ContentCategorization:
         }
     
     @classmethod
-    def get_lessons_by_skill(cls, skill_type: str, level_id: Optional[int] = None) -> List[Dict[str, Any]]:
+    def lessons_by_skill(cls, skill_type: str, level_id: Optional[int] = None) -> List[Dict[str, Any]]:
         """Get lessons that focus on a specific skill"""
-        lessons = Lesson.get_by_skill_focus(skill_type, level_id)
+        lessons = Lesson.by_skill_focus(skill_type, level_id)
         
         result = []
         for lesson in lessons:
-            skill_breakdown = lesson.get_skill_categories()
+            skill_breakdown = lesson.skill_categories()
             result.append({
                 'lesson_id': lesson.lesson_id,
                 'lesson_name': lesson.lesson_name,
@@ -109,16 +109,16 @@ class ContentCategorization:
                 'estimated_time_minutes': lesson.estimated_time_minutes,
                 'skill_breakdown': skill_breakdown,
                 'primary_skill': skill_type,
-                'question_count': lesson.get_question_count()
+                'question_count': lesson.question_count()
             })
         
         return result
     
     @classmethod
-    def get_user_skill_analysis(cls, user_id: int) -> Dict[str, Any]:
+    def user_skill_analysis(cls, user_id: int) -> Dict[str, Any]:
         """Get comprehensive skill analysis for a user"""
         # Get performance by skill type
-        skill_performance = StudentAttempt.get_performance_by_skill(user_id)
+        skill_performance = StudentAttempt.performance_by_skill(user_id)
         
         # Calculate overall statistics
         total_questions = sum(perf['total_questions'] for perf in skill_performance.values())
@@ -131,7 +131,7 @@ class ContentCategorization:
         
         for skill_type, performance in skill_performance.items():
             accuracy = performance['accuracy_percentage']
-            category_info = cls.get_category_info(skill_type)
+            category_info = cls.category_info(skill_type)
             
             skill_data = {
                 'skill_type': skill_type,
@@ -170,11 +170,11 @@ class ContentCategorization:
         
         for skill_type, performance in skill_performance.items():
             accuracy = performance['accuracy_percentage']
-            category_info = cls.get_category_info(skill_type)
+            category_info = cls.category_info(skill_type)
             
             if accuracy < 70:  # Below passing threshold
                 # Find lessons for this skill type
-                skill_lessons = cls.get_lessons_by_skill(skill_type)
+                skill_lessons = cls.lessons_by_skill(skill_type)
                 
                 if skill_lessons:
                     recommendations.append({
@@ -200,7 +200,7 @@ class ContentCategorization:
         return recommendations
     
     @classmethod
-    def get_level_skill_distribution(cls, level_id: int) -> Dict[str, Any]:
+    def level_skill_distribution(cls, level_id: int) -> Dict[str, Any]:
         """Get skill type distribution for a specific level"""
         sql = """
         SELECT 
@@ -244,7 +244,7 @@ class ContentCategorization:
         skill_percentages = {}
         
         for skill_type, count in skill_distribution.items():
-            category_info = cls.get_category_info(skill_type)
+            category_info = cls.category_info(skill_type)
             skill_data = {
                 'skill_name': category_info['name'] if category_info else skill_type,
                 'question_count': count,
@@ -265,14 +265,14 @@ class ContentCategorization:
         }
 
 # Utility functions for quick access
-def get_categories():
+def categories():
     """Quick access to all categories"""
-    return ContentCategorization.get_all_categories()
+    return ContentCategorization.all_categories()
 
 def analyze_user_skills(user_id: int):
     """Quick access to user skill analysis"""
-    return ContentCategorization.get_user_skill_analysis(user_id)
+    return ContentCategorization.user_skill_analysis(user_id)
 
-def get_content_stats():
+def content_stats():
     """Quick access to content overview"""
-    return ContentCategorization.get_content_overview()
+    return ContentCategorization.content_overview()

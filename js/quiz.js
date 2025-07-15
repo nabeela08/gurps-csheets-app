@@ -30,7 +30,6 @@ const progressBar = document.getElementById('progressBar');
 const currentQuestionEl = document.getElementById('currentQuestion');
 const totalQuestionsEl = document.getElementById('totalQuestions');
 const currentScoreEl = document.getElementById('currentScore');
-const questionTypeBadge = document.getElementById('questionTypeBadge');
 const questionText = document.getElementById('questionText');
 const optionsContainer = document.getElementById('optionsContainer');
 const feedbackSection = document.getElementById('feedbackSection');
@@ -40,11 +39,11 @@ const explanationText = document.getElementById('explanationText');
 
 // Button elements
 const exitQuizBtn = document.getElementById('exitQuizBtn');
-const skipBtn = document.getElementById('skipBtn');
 const nextBtn = document.getElementById('nextBtn');
 const submitBtn = document.getElementById('submitBtn');
 const cancelExitBtn = document.getElementById('cancelExitBtn');
 const confirmExitBtn = document.getElementById('confirmExitBtn');
+const viewResultsBtn = document.getElementById('viewResultsBtn');
 
 // Timer variables
 let timerInterval = null;
@@ -82,20 +81,36 @@ function setupEventListeners() {
     // Quiz navigation
     submitBtn.addEventListener('click', submitAnswer);
     nextBtn.addEventListener('click', nextQuestion);
-    skipBtn.addEventListener('click', skipQuestion);
     
     // Exit quiz
     exitQuizBtn.addEventListener('click', showExitModal);
     cancelExitBtn.addEventListener('click', hideExitModal);
     confirmExitBtn.addEventListener('click', exitQuiz);
     
-    // Prevent accidental page refresh
+    // View results (only works when quiz is complete)
+    if (viewResultsBtn) {
+        viewResultsBtn.addEventListener('click', function() {
+            // Use safe navigation to avoid beforeunload warning
+            window.safeNavigate('results.html');
+        });
+    }
+    
+    // Global navigation control
+    window.allowNavigation = false;
+    
+    // Prevent accidental page refresh (but not during quiz completion or navigation)
     window.addEventListener('beforeunload', function(e) {
-        if (quizData.currentQuestionIndex < quizData.questions.length) {
+        if (!window.allowNavigation && quizData.currentQuestionIndex < quizData.questions.length) {
             e.preventDefault();
             e.returnValue = '';
         }
     });
+    
+    // Function to safely navigate without warning
+    window.safeNavigate = function(url) {
+        window.allowNavigation = true;
+        window.location.href = url;
+    };
 }
 
 // Start Quiz
@@ -120,15 +135,27 @@ async function startQuiz() {
         }
         
         const data = await response.json();
+        console.log('Quiz start response:', data); // Debug log
         
-        // Initialize quiz data
-        quizData.questions = data.questions || [];
+        // Check if response is successful
+        if (!data.success) {
+            throw new Error(data.message || 'Failed to start quiz');
+        }
+        
+        // Initialize quiz data from session-based response
+        quizData.questions = data.question ? [data.question] : [];
+        quizData.currentQuestionIndex = 0;
         quizData.startTime = new Date();
         
-        // Update UI
-        quizTitle.textContent = data.lesson_name || 'Quiz';
-        lessonName.textContent = data.level_name || 'English Learning';
-        totalQuestionsEl.textContent = quizData.questions.length;
+        console.log('Questions loaded:', quizData.questions.length); // Debug log
+        
+        // Update UI with session data
+        if (data.session_data) {
+            quizTitle.textContent = data.session_data.lesson_name || 'Quiz';
+            lessonName.textContent = 'English Learning';
+            totalQuestionsEl.textContent = data.session_data.total_questions || 0;
+            console.log('Total questions:', data.session_data.total_questions); // Debug log
+        }
         
         // Start timer
         startTimer();
@@ -141,7 +168,8 @@ async function startQuiz() {
         
     } catch (error) {
         console.error('Error starting quiz:', error);
-        alert('Failed to load quiz. Please try again.');
+        console.error('Error stack:', error.stack);
+        alert('Failed to load quiz: ' + error.message);
         window.location.href = '../pages/dashboard.html';
     }
 }
@@ -162,11 +190,6 @@ function showQuestion() {
     const progress = ((quizData.currentQuestionIndex) / quizData.questions.length) * 100;
     progressBar.style.width = `${progress}%`;
     
-    // Update question type badge
-    const questionType = question.question_type || 'vocabulary';
-    questionTypeBadge.textContent = formatQuestionType(questionType);
-    questionTypeBadge.className = `inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getQuestionTypeBadgeClass(questionType)}`;
-    
     // Update question text
     questionText.textContent = question.question_text;
     
@@ -177,7 +200,6 @@ function showQuestion() {
     submitBtn.disabled = true;
     submitBtn.classList.remove('hidden');
     nextBtn.classList.add('hidden');
-    skipBtn.classList.remove('hidden');
     
     // Render options
     renderOptions(question.options);
@@ -245,7 +267,7 @@ async function submitAnswer() {
             },
             body: JSON.stringify({
                 question_id: question.question_id,
-                selected_option_id: selectedOptionId
+                option_id: selectedOptionId
             })
         });
         
@@ -260,10 +282,37 @@ async function submitAnswer() {
             currentScoreEl.textContent = quizData.score;
         }
         
+        // Check if quiz is complete
+        if (result.quiz_complete) {
+            // Store level upgrade info if available
+            if (result.level_upgrade) {
+                quizData.levelUpgrade = result.level_upgrade;
+            }
+            
+            // Store detailed results from backend
+            if (result.results && result.results.detailed_results) {
+                quizData.detailedResults = result.results.detailed_results;
+            }
+            
+            // Store backend results
+            if (result.results) {
+                quizData.backendResults = result.results;
+            }
+            
+            setTimeout(() => {
+                completeQuiz();
+            }, 2000);
+            return;
+        }
+        
+        // Add next question if available
+        if (result.question) {
+            quizData.questions.push(result.question);
+        }
+        
         // Show next button
         submitBtn.classList.add('hidden');
         nextBtn.classList.remove('hidden');
-        skipBtn.classList.add('hidden');
         
     } catch (error) {
         console.error('Error submitting answer:', error);
@@ -310,8 +359,11 @@ function showFeedback(isCorrect, correctOptionId, explanation) {
         
         if (optionId === correctOptionId) {
             opt.classList.add('border-green-500', 'bg-green-50');
-            opt.querySelector('.bg-gray-100').classList.remove('bg-gray-100');
-            opt.querySelector('.bg-gray-100, .bg-green-500').classList.add('bg-green-500', 'text-white');
+            const circle = opt.querySelector('.bg-gray-100');
+            if (circle) {
+                circle.classList.remove('bg-gray-100');
+                circle.classList.add('bg-green-500', 'text-white');
+            }
         } else if (optionId === quizData.answers[quizData.currentQuestionIndex] && !isCorrect) {
             opt.classList.add('border-red-500', 'bg-red-50');
         }
@@ -335,24 +387,19 @@ function nextQuestion() {
     }
 }
 
-// Skip Question
-function skipQuestion() {
-    // Mark as skipped (no answer)
-    quizData.answers[quizData.currentQuestionIndex] = null;
-    
-    // Move to next question
-    nextQuestion();
-}
 
 // Complete Quiz
 function completeQuiz() {
     quizData.endTime = new Date();
     stopTimer();
     
-    // Calculate results
-    const totalQuestions = quizData.questions.length;
-    const correctAnswers = quizData.score;
-    const scorePercentage = Math.round((correctAnswers / totalQuestions) * 100);
+    // Allow navigation without warning since quiz is complete
+    window.allowNavigation = true;
+    
+    // Calculate results - use backend results if available
+    const totalQuestions = quizData.backendResults?.total_questions || quizData.questions.length;
+    const correctAnswers = quizData.backendResults?.correct_answers || quizData.score;
+    const scorePercentage = quizData.backendResults?.score_percentage || Math.round((correctAnswers / totalQuestions) * 100);
     const timeTaken = formatTime(elapsedSeconds);
     
     // Update completion screen
@@ -364,19 +411,27 @@ function completeQuiz() {
     const quizResults = {
         lessonId: quizData.lessonId,
         lessonName: lessonName.textContent,
-        questions: quizData.questions,
+        questions: quizData.detailedResults || quizData.questions, // Use detailed results if available
         answers: quizData.answers,
         score: correctAnswers,
         totalQuestions: totalQuestions,
         scorePercentage: scorePercentage,
         timeTaken: elapsedSeconds,
-        completedAt: new Date().toISOString()
+        completedAt: new Date().toISOString(),
+        detailedResults: quizData.detailedResults // Include detailed results
     };
     
     localStorage.setItem('lastQuizResults', JSON.stringify(quizResults));
     
     // Show completion screen
     showQuizComplete();
+    
+    // Check for level upgrade
+    if (quizData.levelUpgrade && quizData.levelUpgrade.upgraded) {
+        setTimeout(() => {
+            showLevelUpgradeModal(quizData.levelUpgrade);
+        }, 1000);
+    }
 }
 
 // Timer Functions
@@ -423,27 +478,6 @@ function getAuthToken() {
     return localStorage.getItem('authToken');
 }
 
-function formatQuestionType(type) {
-    const types = {
-        'vocabulary': 'Vocabulary',
-        'grammar': 'Grammar',
-        'sentence_formation': 'Sentence Formation',
-        'fill_in_blank': 'Fill in the Blank',
-        'error_correction': 'Error Correction'
-    };
-    return types[type] || 'Question';
-}
-
-function getQuestionTypeBadgeClass(type) {
-    const classes = {
-        'vocabulary': 'bg-blue-100 text-blue-700',
-        'grammar': 'bg-green-100 text-green-700',
-        'sentence_formation': 'bg-purple-100 text-purple-700',
-        'fill_in_blank': 'bg-yellow-100 text-yellow-700',
-        'error_correction': 'bg-red-100 text-red-700'
-    };
-    return classes[type] || 'bg-gray-100 text-gray-700';
-}
 
 // UI State Functions
 function showLoading() {
@@ -462,4 +496,60 @@ function showQuizComplete() {
     loadingState.classList.add('hidden');
     quizContent.classList.add('hidden');
     quizComplete.classList.remove('hidden');
+}
+
+function showLevelUpgradeModal(upgradeInfo) {
+    const modalHTML = `
+        <div id="levelUpgradeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-8 max-w-md mx-4 animate-bounce-in">
+                <!-- Success Icon -->
+                <div class="flex items-center justify-center w-20 h-20 bg-yellow-100 rounded-full mx-auto mb-4">
+                    <svg class="w-10 h-10 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                
+                <!-- Content -->
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">🎉 Level Up!</h2>
+                    <p class="text-lg text-gray-700 mb-4">Congratulations! You've unlocked a new level!</p>
+                    
+                    <!-- Level Info -->
+                    <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-6">
+                        <div class="text-sm text-gray-600 mb-1">You've advanced to:</div>
+                        <div class="text-xl font-bold text-purple-600">${upgradeInfo.new_level_name}</div>
+                        <div class="text-sm text-gray-500 mt-2">
+                            ${upgradeInfo.completion_progress.completed_lessons}/${upgradeInfo.completion_progress.total_lessons} lessons completed in previous level!
+                        </div>
+                    </div>
+                    
+                    <!-- Actions -->
+                    <div class="flex space-x-3">
+                        <button onclick="closeLevelUpgradeModal()" class="flex-1 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">
+                            Continue
+                        </button>
+                        <button onclick="goToNewLevel()" class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors">
+                            Explore New Lessons
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add modal to page
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function closeLevelUpgradeModal() {
+    const modal = document.getElementById('levelUpgradeModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function goToNewLevel() {
+    closeLevelUpgradeModal();
+    // Go to dashboard to see new lessons
+    window.location.href = '../pages/dashboard.html';
 }

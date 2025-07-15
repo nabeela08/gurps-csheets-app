@@ -57,7 +57,6 @@ function setupEventListeners() {
     passwordInput.addEventListener('input', handlePasswordInput);
     passwordInput.addEventListener('blur', validatePassword);
     confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
-    agreeTermsCheckbox.addEventListener('change', validateTerms);
     
     // Clear errors on input
     usernameInput.addEventListener('input', clearFieldError);
@@ -156,8 +155,6 @@ function validateForm(userData) {
     // Validate confirm password
     if (!validateConfirmPassword()) isValid = false;
     
-    // Validate terms agreement
-    if (!validateTerms()) isValid = false;
     
     return isValid;
 }

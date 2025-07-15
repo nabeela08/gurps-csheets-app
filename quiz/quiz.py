@@ -6,8 +6,8 @@ Handles quiz sessions, scoring, validation, and attempt tracking
 import time
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
-from ..models import User, Lesson, Question, Option, StudentAttempt
-from ..database import query, insert
+from src.main.models import User, Lesson, Question, Option, StudentAttempt
+from src.main.database import query, insert
 
 # Global storage for active quiz sessions
 active_sessions = {}  # user_id: session_data
@@ -29,23 +29,23 @@ class QuizSession:
     
     def _load_questions(self):
         """Load all questions for the lesson with their options"""
-        lesson = Lesson.get_by_id(self.lesson_id)
+        lesson = Lesson.by_id(self.lesson_id)
         if not lesson:
             raise ValueError(f"Lesson {self.lesson_id} not found")
         
-        questions = Question.get_by_lesson(self.lesson_id)
+        questions = Question.by_lesson(self.lesson_id)
         for question in questions:
-            options = Option.get_by_question(question.question_id)
+            options = Option.by_question(question.question_id)
             self.questions.append({
                 'question': question,
                 'options': options
             })
     
-    def get_question_count(self) -> int:
+    def question_count(self) -> int:
         """Get total number of questions in quiz"""
         return len(self.questions)
     
-    def get_current_question(self) -> Optional[Dict[str, Any]]:
+    def current_question(self) -> Optional[Dict[str, Any]]:
         """Get current question with options"""
         if self.current_question_index < len(self.questions):
             return self.questions[self.current_question_index]
@@ -90,7 +90,7 @@ class QuizSession:
         score_percentage = int((correct_answers / total_questions) * 100) if total_questions > 0 else 0
         return score_percentage, correct_answers, total_questions
     
-    def get_completion_time(self) -> int:
+    def completion_time(self) -> int:
         """Get completion time in minutes"""
         completion_time = datetime.now() - self.start_time
         return int(completion_time.total_seconds() / 60)
@@ -99,11 +99,11 @@ def start_quiz(user_id: int, lesson_id: int) -> Dict[str, Any]:
     """Start a new quiz session"""
     try:
         # Validate user and lesson
-        user = User.get_by_id(user_id)
+        user = User.by_id(user_id)
         if not user:
             return {'success': False, 'message': 'User not found'}
         
-        lesson = Lesson.get_by_id(lesson_id)
+        lesson = Lesson.by_id(lesson_id)
         if not lesson:
             return {'success': False, 'message': 'Lesson not found'}
         
@@ -120,7 +120,7 @@ def start_quiz(user_id: int, lesson_id: int) -> Dict[str, Any]:
         active_sessions[user_id] = session
         
         # Get first question
-        first_question = session.get_current_question()
+        first_question = session.current_question()
         
         return {
             'success': True,
@@ -128,7 +128,7 @@ def start_quiz(user_id: int, lesson_id: int) -> Dict[str, Any]:
             'session_data': {
                 'lesson_id': lesson_id,
                 'lesson_name': lesson.lesson_name,
-                'total_questions': session.get_question_count(),
+                'total_questions': session.question_count(),
                 'current_question_index': 0,
                 'estimated_time': lesson.estimated_time_minutes
             },
@@ -150,18 +150,31 @@ def submit_answer(user_id: int, question_id: int, option_id: int) -> Dict[str, A
         if not session.submit_answer(question_id, option_id):
             return {'success': False, 'message': 'Question already answered'}
         
+        # Get the question to check if answer is correct
+        question = Question.by_id(question_id)
+        is_correct = question.validate_answer(option_id) if question else False
+        
+        # Get correct option for feedback
+        correct_option_id = None
+        if question:
+            options = Option.by_question(question_id)
+            correct_option = next((opt for opt in options if opt.is_correct), None)
+            correct_option_id = correct_option.option_id if correct_option else None
+        
         # Check if quiz is complete
         if session.is_complete():
             return complete_quiz(user_id)
         
         # Move to next question
         session.next_question()
-        next_question = session.get_current_question()
+        next_question = session.current_question()
         
         return {
             'success': True,
             'message': 'Answer submitted successfully',
             'quiz_complete': False,
+            'is_correct': is_correct,
+            'correct_option_id': correct_option_id,
             'current_question_index': session.current_question_index,
             'question': format_question(next_question) if next_question else None
         }
@@ -169,20 +182,20 @@ def submit_answer(user_id: int, question_id: int, option_id: int) -> Dict[str, A
     except Exception as e:
         return {'success': False, 'message': f'Failed to submit answer: {str(e)}'}
 
-def get_quiz_progress(user_id: int) -> Dict[str, Any]:
+def quiz_progress(user_id: int) -> Dict[str, Any]:
     """Get current quiz progress"""
     if user_id not in active_sessions:
         return {'success': False, 'message': 'No active quiz session'}
     
     session = active_sessions[user_id]
-    current_question = session.get_current_question()
+    current_question = session.current_question()
     
     return {
         'success': True,
         'progress': {
             'lesson_id': session.lesson_id,
             'current_question_index': session.current_question_index,
-            'total_questions': session.get_question_count(),
+            'total_questions': session.question_count(),
             'answered_questions': len(session.answers),
             'quiz_complete': session.is_complete()
         },
@@ -195,7 +208,10 @@ def complete_quiz(user_id: int) -> Dict[str, Any]:
     
     # Calculate score
     score_percentage, correct_answers, total_questions = session.calculate_score()
-    completion_time = session.get_completion_time()
+    completion_time = session.completion_time()
+    
+    # Determine if lesson is completed (passing score >= 70%)
+    is_completed = score_percentage >= 70
     
     # Save attempt to database
     attempt = StudentAttempt.create(
@@ -204,16 +220,33 @@ def complete_quiz(user_id: int) -> Dict[str, Any]:
         score=score_percentage,
         total_questions=total_questions,
         correct_answers=correct_answers,
-        completion_time_minutes=completion_time
+        completion_time_minutes=completion_time,
+        is_completed=is_completed
     )
     
+    # Check for level progression if lesson completed
+    level_upgrade_info = None
+    if is_completed:
+        user = User.by_id(user_id)
+        if user:
+            upgrade_check = user.check_level_upgrade()
+            if upgrade_check['can_upgrade']:
+                # Upgrade user to next level
+                if user.upgrade_level():
+                    level_upgrade_info = {
+                        'upgraded': True,
+                        'new_level_id': upgrade_check['next_level_id'],
+                        'new_level_name': upgrade_check['next_level_name'],
+                        'completion_progress': upgrade_check['current_progress']
+                    }
+    
     # Get detailed results
-    results = get_detailed_results(session)
+    results = detailed_results(session)
     
     # Clean up session
     del active_sessions[user_id]
     
-    return {
+    response = {
         'success': True,
         'message': 'Quiz completed successfully',
         'quiz_complete': True,
@@ -224,11 +257,18 @@ def complete_quiz(user_id: int) -> Dict[str, Any]:
             'total_questions': total_questions,
             'completion_time_minutes': completion_time,
             'passing_score': attempt.is_passing_score(),
+            'lesson_completed': is_completed,
             'detailed_results': results
         }
     }
+    
+    # Add level upgrade info if applicable
+    if level_upgrade_info:
+        response['level_upgrade'] = level_upgrade_info
+    
+    return response
 
-def get_detailed_results(session: QuizSession) -> List[Dict[str, Any]]:
+def detailed_results(session: QuizSession) -> List[Dict[str, Any]]:
     """Get detailed results for each question"""
     results = []
     
@@ -293,13 +333,13 @@ def end_quiz_session(user_id: int) -> bool:
         return True
     return False
 
-def get_quiz_history(user_id: int, limit: int = 10) -> List[Dict[str, Any]]:
+def quiz_history(user_id: int, limit: int = 10) -> List[Dict[str, Any]]:
     """Get user's quiz attempt history"""
-    attempts = StudentAttempt.get_by_user(user_id)
+    attempts = StudentAttempt.by_user(user_id)
     
     history = []
     for attempt in attempts[:limit]:
-        lesson = Lesson.get_by_id(attempt.lesson_id)
+        lesson = Lesson.by_id(attempt.lesson_id)
         history.append({
             'attempt_id': attempt.attempt_id,
             'lesson_id': attempt.lesson_id,

@@ -24,15 +24,20 @@ class User:
     @classmethod
     def create(cls, username: str, email: str, password_hash: str) -> 'User':
         """Create a new user"""
+        # Get the beginner level ID
+        beginner_level_sql = "SELECT level_id FROM levels WHERE level_name = 'Beginner'"
+        beginner_result = query(beginner_level_sql)
+        beginner_level_id = beginner_result[0]['level_id'] if beginner_result else 1
+        
         sql = """
-        INSERT INTO users (username, email, password_hash)
-        VALUES (%s, %s, %s)
+        INSERT INTO users (username, email, password_hash, current_level_id)
+        VALUES (%s, %s, %s, %s)
         """
-        user_id = insert(sql, (username, email, password_hash))
-        return cls.get_by_id(user_id)
+        user_id = insert(sql, (username, email, password_hash, beginner_level_id))
+        return cls.by_id(user_id)
     
     @classmethod
-    def get_by_id(cls, user_id: int) -> Optional['User']:
+    def by_id(cls, user_id: int) -> Optional['User']:
         """Get user by ID"""
         sql = "SELECT * FROM users WHERE user_id = %s"
         result = query(sql, (user_id,))
@@ -41,7 +46,7 @@ class User:
         return None
     
     @classmethod
-    def get_by_email(cls, email: str) -> Optional['User']:
+    def by_email(cls, email: str) -> Optional['User']:
         """Get user by email"""
         sql = "SELECT * FROM users WHERE email = %s"
         result = query(sql, (email,))
@@ -50,7 +55,7 @@ class User:
         return None
     
     @classmethod
-    def get_by_username(cls, username: str) -> Optional['User']:
+    def by_username(cls, username: str) -> Optional['User']:
         """Get user by username"""
         sql = "SELECT * FROM users WHERE username = %s"
         result = query(sql, (username,))
@@ -58,12 +63,12 @@ class User:
             return cls(**result[0])
         return None
     
-    def update_profile(self, **kwargs) -> bool:
+    def set_profile(self, **kwargs) -> bool:
         """Update user profile"""
         if not self.user_id:
             return False
         
-        allowed_fields = ['current_level_id']
+        allowed_fields = ['username']
         updates = []
         params = []
         
@@ -81,7 +86,7 @@ class User:
         affected = update(sql, tuple(params))
         return affected > 0
     
-    def get_attempts(self) -> List[Dict[str, Any]]:
+    def attempts(self) -> List[Dict[str, Any]]:
         """Get all quiz attempts for this user"""
         sql = """
         SELECT sa.*, l.lesson_name, lv.level_name 
@@ -93,7 +98,7 @@ class User:
         """
         return query(sql, (self.user_id,))
     
-    def get_progress(self) -> Dict[str, Any]:
+    def progress(self) -> Dict[str, Any]:
         """Get user's learning progress"""
         sql = """
         SELECT 
@@ -104,10 +109,103 @@ class User:
         FROM student_attempts sa
         JOIN lessons ls ON sa.lesson_id = ls.lesson_id
         JOIN levels l ON %s = l.level_id
-        WHERE sa.user_id = %s
+        WHERE sa.user_id = %s AND sa.score >= 70
         """
         result = query(sql, (self.current_level_id, self.user_id))
         return result[0] if result else {}
+    
+    def completed_lessons(self) -> List[int]:
+        """Get list of completed lesson IDs (lessons with passing score >= 70%)"""
+        sql = """
+        SELECT DISTINCT lesson_id 
+        FROM student_attempts 
+        WHERE user_id = %s AND score >= 70
+        """
+        result = query(sql, (self.user_id,))
+        return [row['lesson_id'] for row in result] if result else []
+    
+    def is_lesson_completed(self, lesson_id: int) -> bool:
+        """Check if a specific lesson is completed"""
+        sql = """
+        SELECT COUNT(*) as count
+        FROM student_attempts 
+        WHERE user_id = %s AND lesson_id = %s AND score >= 70
+        """
+        result = query(sql, (self.user_id, lesson_id))
+        return result[0]['count'] > 0 if result else False
+    
+    def level_completion_progress(self, level_id: int) -> Dict[str, Any]:
+        """Get completion progress for a specific level"""
+        # Get total lessons in level
+        sql_total = """
+        SELECT COUNT(*) as total_lessons
+        FROM lessons 
+        WHERE level_id = %s
+        """
+        total_result = query(sql_total, (level_id,))
+        total_lessons = total_result[0]['total_lessons'] if total_result else 0
+        
+        # Get completed lessons in level
+        sql_completed = """
+        SELECT COUNT(DISTINCT l.lesson_id) as completed_lessons
+        FROM lessons l
+        JOIN student_attempts sa ON l.lesson_id = sa.lesson_id
+        WHERE l.level_id = %s AND sa.user_id = %s AND sa.score >= 70
+        """
+        completed_result = query(sql_completed, (level_id, self.user_id))
+        completed_lessons = completed_result[0]['completed_lessons'] if completed_result else 0
+        
+        completion_percentage = (completed_lessons / total_lessons * 100) if total_lessons > 0 else 0
+        
+        return {
+            'total_lessons': total_lessons,
+            'completed_lessons': completed_lessons,
+            'completion_percentage': round(completion_percentage, 1),
+            'is_level_completed': completed_lessons == total_lessons and total_lessons > 0
+        }
+    
+    def check_level_upgrade(self) -> Dict[str, Any]:
+        """Check if user can be upgraded to next level"""
+        current_progress = self.level_completion_progress(self.current_level_id)
+        
+        if current_progress['is_level_completed']:
+            # Get next level
+            sql = """
+            SELECT level_id, level_name 
+            FROM levels 
+            WHERE level_order > (SELECT level_order FROM levels WHERE level_id = %s)
+            ORDER BY level_order ASC 
+            LIMIT 1
+            """
+            result = query(sql, (self.current_level_id,))
+            
+            if result:
+                next_level = result[0]
+                return {
+                    'can_upgrade': True,
+                    'next_level_id': next_level['level_id'],
+                    'next_level_name': next_level['level_name'],
+                    'current_progress': current_progress
+                }
+        
+        return {
+            'can_upgrade': False,
+            'current_progress': current_progress
+        }
+    
+    def upgrade_level(self) -> bool:
+        """Upgrade user to next level if eligible"""
+        upgrade_check = self.check_level_upgrade()
+        
+        if upgrade_check['can_upgrade']:
+            sql = "UPDATE users SET current_level_id = %s WHERE user_id = %s"
+            affected = update(sql, (upgrade_check['next_level_id'], self.user_id))
+            
+            if affected > 0:
+                self.current_level_id = upgrade_check['next_level_id']
+                return True
+        
+        return False
 
 class Level:
     """Level model for learning levels"""
@@ -122,14 +220,14 @@ class Level:
         self.created_at = created_at
     
     @classmethod
-    def get_all(cls) -> List['Level']:
+    def all(cls) -> List['Level']:
         """Get all levels ordered by level_order"""
         sql = "SELECT * FROM levels ORDER BY level_order"
         results = query(sql)
         return [cls(**row) for row in results]
     
     @classmethod
-    def get_by_id(cls, level_id: int) -> Optional['Level']:
+    def by_id(cls, level_id: int) -> Optional['Level']:
         """Get level by ID"""
         sql = "SELECT * FROM levels WHERE level_id = %s"
         result = query(sql, (level_id,))
@@ -137,11 +235,11 @@ class Level:
             return cls(**result[0])
         return None
     
-    def get_lessons(self) -> List['Lesson']:
+    def lessons(self) -> List['Lesson']:
         """Get all lessons for this level"""
-        return Lesson.get_by_level(self.level_id)
+        return Lesson.by_level(self.level_id)
     
-    def get_lesson_count(self) -> int:
+    def lesson_count(self) -> int:
         """Get number of lessons in this level"""
         sql = "SELECT COUNT(*) as count FROM lessons WHERE level_id = %s"
         result = query(sql, (self.level_id,))
@@ -163,21 +261,21 @@ class Lesson:
         self.created_at = created_at
     
     @classmethod
-    def get_by_level(cls, level_id: int) -> List['Lesson']:
+    def by_level(cls, level_id: int) -> List['Lesson']:
         """Get all lessons for a specific level"""
         sql = "SELECT * FROM lessons WHERE level_id = %s ORDER BY lesson_order"
         results = query(sql, (level_id,))
         return [cls(**row) for row in results]
     
     @classmethod
-    def get_all(cls) -> List['Lesson']:
+    def all(cls) -> List['Lesson']:
         """Get all lessons"""
         sql = "SELECT * FROM lessons ORDER BY level_id, lesson_order"
         results = query(sql)
         return [cls(**row) for row in results]
     
     @classmethod
-    def get_by_id(cls, lesson_id: int) -> Optional['Lesson']:
+    def by_id(cls, lesson_id: int) -> Optional['Lesson']:
         """Get lesson by ID"""
         sql = "SELECT * FROM lessons WHERE lesson_id = %s"
         result = query(sql, (lesson_id,))
@@ -185,23 +283,23 @@ class Lesson:
             return cls(**result[0])
         return None
     
-    def get_questions(self) -> List['Question']:
+    def questions(self) -> List['Question']:
         """Get all questions for this lesson"""
-        return Question.get_by_lesson(self.lesson_id)
+        return Question.by_lesson(self.lesson_id)
     
-    def get_question_count(self) -> int:
+    def question_count(self) -> int:
         """Get number of questions in this lesson"""
         sql = "SELECT COUNT(*) as count FROM questions WHERE lesson_id = %s"
         result = query(sql, (self.lesson_id,))
         return result[0]['count'] if result else 0
     
-    def get_average_score(self) -> float:
+    def average_score(self) -> float:
         """Get average score for this lesson"""
         sql = "SELECT AVG(score) as avg_score FROM student_attempts WHERE lesson_id = %s"
         result = query(sql, (self.lesson_id,))
         return result[0]['avg_score'] if result and result[0]['avg_score'] else 0.0
     
-    def get_skill_categories(self) -> Dict[str, int]:
+    def skill_categories(self) -> Dict[str, int]:
         """Get count of questions by skill type for this lesson"""
         sql = """
         SELECT question_type, COUNT(*) as count 
@@ -213,7 +311,7 @@ class Lesson:
         return {row['question_type']: row['count'] for row in results}
     
     @classmethod
-    def get_by_skill_focus(cls, skill_type: str, level_id: int = None) -> List['Lesson']:
+    def by_skill_focus(cls, skill_type: str, level_id: int = None) -> List['Lesson']:
         """Get lessons that focus on a specific skill type"""
         if level_id:
             sql = """
@@ -247,14 +345,14 @@ class Question:
         self.created_at = created_at
     
     @classmethod
-    def get_by_lesson(cls, lesson_id: int) -> List['Question']:
+    def by_lesson(cls, lesson_id: int) -> List['Question']:
         """Get all questions for a specific lesson"""
         sql = "SELECT * FROM questions WHERE lesson_id = %s ORDER BY question_id"
         results = query(sql, (lesson_id,))
         return [cls(**row) for row in results]
     
     @classmethod
-    def get_by_id(cls, question_id: int) -> Optional['Question']:
+    def by_id(cls, question_id: int) -> Optional['Question']:
         """Get question by ID"""
         sql = "SELECT * FROM questions WHERE question_id = %s"
         result = query(sql, (question_id,))
@@ -262,11 +360,11 @@ class Question:
             return cls(**result[0])
         return None
     
-    def get_options(self) -> List['Option']:
+    def options(self) -> List['Option']:
         """Get all options for this question"""
-        return Option.get_by_question(self.question_id)
+        return Option.by_question(self.question_id)
     
-    def get_correct_options(self) -> List['Option']:
+    def correct_options(self) -> List['Option']:
         """Get correct options for this question"""
         sql = "SELECT * FROM options WHERE question_id = %s AND is_correct = TRUE"
         results = query(sql, (self.question_id,))
@@ -279,14 +377,14 @@ class Question:
         return result[0]['is_correct'] if result else False
     
     @classmethod
-    def get_by_type(cls, question_type: str) -> List['Question']:
+    def by_type(cls, question_type: str) -> List['Question']:
         """Get all questions by type"""
         sql = "SELECT * FROM questions WHERE question_type = %s ORDER BY lesson_id, question_id"
         results = query(sql, (question_type,))
         return [cls(**row) for row in results]
     
     @classmethod
-    def get_type_statistics(cls) -> Dict[str, int]:
+    def type_statistics(cls) -> Dict[str, int]:
         """Get count of questions by type"""
         sql = """
         SELECT question_type, COUNT(*) as count 
@@ -298,7 +396,7 @@ class Question:
         return {row['question_type']: row['count'] for row in results}
     
     @classmethod
-    def get_difficulty_statistics(cls) -> Dict[str, int]:
+    def difficulty_statistics(cls) -> Dict[str, int]:
         """Get count of questions by difficulty"""
         sql = """
         SELECT difficulty_level, COUNT(*) as count 
@@ -322,14 +420,14 @@ class Option:
         self.option_order = option_order
     
     @classmethod
-    def get_by_question(cls, question_id: int) -> List['Option']:
+    def by_question(cls, question_id: int) -> List['Option']:
         """Get all options for a specific question"""
         sql = "SELECT * FROM options WHERE question_id = %s ORDER BY option_order"
         results = query(sql, (question_id,))
         return [cls(**row) for row in results]
     
     @classmethod
-    def get_by_id(cls, option_id: int) -> Optional['Option']:
+    def by_id(cls, option_id: int) -> Optional['Option']:
         """Get option by ID"""
         sql = "SELECT * FROM options WHERE option_id = %s"
         result = query(sql, (option_id,))
@@ -343,7 +441,7 @@ class StudentAttempt:
     def __init__(self, attempt_id: int = None, user_id: int = None, 
                  lesson_id: int = None, score: int = 0, total_questions: int = 0, 
                  correct_answers: int = 0, attempt_date: datetime = None, 
-                 completion_time_minutes: int = None):
+                 completion_time_minutes: int = None, is_completed: bool = False):
         self.attempt_id = attempt_id
         self.user_id = user_id
         self.lesson_id = lesson_id
@@ -352,23 +450,24 @@ class StudentAttempt:
         self.correct_answers = correct_answers
         self.attempt_date = attempt_date
         self.completion_time_minutes = completion_time_minutes
+        self.is_completed = is_completed
     
     @classmethod
     def create(cls, user_id: int, lesson_id: int, score: int, 
                total_questions: int, correct_answers: int, 
-               completion_time_minutes: int = None) -> 'StudentAttempt':
+               completion_time_minutes: int = None, is_completed: bool = False) -> 'StudentAttempt':
         """Create a new student attempt"""
         sql = """
         INSERT INTO student_attempts 
-        (user_id, lesson_id, score, total_questions, correct_answers, completion_time_minutes)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        (user_id, lesson_id, score, total_questions, correct_answers, completion_time_minutes, is_completed)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
         attempt_id = insert(sql, (user_id, lesson_id, score, total_questions, 
-                                correct_answers, completion_time_minutes))
-        return cls.get_by_id(attempt_id)
+                                correct_answers, completion_time_minutes, is_completed))
+        return cls.by_id(attempt_id)
     
     @classmethod
-    def get_by_id(cls, attempt_id: int) -> Optional['StudentAttempt']:
+    def by_id(cls, attempt_id: int) -> Optional['StudentAttempt']:
         """Get attempt by ID"""
         sql = "SELECT * FROM student_attempts WHERE attempt_id = %s"
         result = query(sql, (attempt_id,))
@@ -377,7 +476,7 @@ class StudentAttempt:
         return None
     
     @classmethod
-    def get_by_user(cls, user_id: int) -> List['StudentAttempt']:
+    def by_user(cls, user_id: int) -> List['StudentAttempt']:
         """Get all attempts by a specific user"""
         sql = "SELECT * FROM student_attempts WHERE user_id = %s ORDER BY attempt_date DESC"
         results = query(sql, (user_id,))
@@ -394,7 +493,7 @@ class StudentAttempt:
         return self.calculate_percentage() >= passing_threshold
     
     @classmethod
-    def get_performance_by_skill(cls, user_id: int) -> Dict[str, Dict[str, Any]]:
+    def performance_by_skill(cls, user_id: int) -> Dict[str, Dict[str, Any]]:
         """Get user performance breakdown by skill type"""
         sql = """
         SELECT 

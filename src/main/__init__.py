@@ -1,5 +1,4 @@
 """WORDIAMO English Learning Platform - Main Module"""
 
-from .app import app, create_app
-
-__all__ = ['app', 'create_app']
+# Removed app import to avoid circular dependency
+__all__ = []

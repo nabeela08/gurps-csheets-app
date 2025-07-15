@@ -20,7 +20,7 @@ def get_mysql_connection():
         print(f"MySQL Connection Error: {e}")
         return None
 
-def run_sql_file(connection, file_path):
+def run_sql_file(connection, file_path, ignore_table_exists=False):
     """Execute SQL file"""
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -28,10 +28,22 @@ def run_sql_file(connection, file_path):
         
         statements = [stmt.strip() for stmt in sql_content.split(';') if stmt.strip()]
         
-        cursor = connection.cursor()
+        cursor = connection.cursor(buffered=True)
         for statement in statements:
             if statement:
-                cursor.execute(statement)
+                try:
+                    cursor.execute(statement)
+                    # Consume any results to avoid "Unread result found" error
+                    try:
+                        cursor.fetchall()
+                    except:
+                        pass
+                except mysql.connector.Error as e:
+                    if ignore_table_exists and "already exists" in str(e):
+                        print(f"  Skipping: {str(e)}")
+                        continue
+                    else:
+                        raise e
         
         connection.commit()
         cursor.close()
@@ -44,7 +56,7 @@ def run_sql_file(connection, file_path):
 def check_database_exists(connection):
     try:
         cursor = connection.cursor()
-        cursor.execute("SHOW DATABASE 'english_learning_db'")
+        cursor.execute("SHOW DATABASES LIKE 'english_learning_db'")
         result = cursor.fetchone()
         cursor.close()
         return result is not None
@@ -99,7 +111,7 @@ def setup_database():
     print("\n2. Checking database...")
     if not check_database_exists(connection):
         print("  Database not found. Creating schema...")
-        if run_sql_file(connection, 'database/schema.sql'):
+        if run_sql_file(connection, 'database/schema.sql', ignore_table_exists=True):
             print("Database schema created")
         else:
             print("Failed to create schema")
@@ -111,7 +123,7 @@ def setup_database():
     print("\n3. Checking tables...")
     if not check_tables_exist(connection):
         print(" Tables missing. Creating schema...")
-        if run_sql_file(connection, 'database/schema.sql'):
+        if run_sql_file(connection, 'database/schema.sql', ignore_table_exists=True):
             print("Tables created")
         else:
             print("Failed to create tables")
@@ -162,12 +174,7 @@ if __name__ == "__main__":
         exit(1)
     
     success = setup_database()
-    
     if success:
-        print("\nReady to run backend tests!")
-        print("Next steps:")
-        print("1. Run: python quick_db_test.py")
-        print("2. Run: python run.py")
-        print("3. Run: python test_backend.py")
+        print("Database setup completed successfully")
     else:
-        print("\nSetup failed. Check the errors above.")
+        print("Database setup failed")

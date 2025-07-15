@@ -144,61 +144,15 @@
         <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 mb-8">
             <h3 class="text-2xl font-semibold text-gray-900 mb-6">Performance Analysis</h3>
             
-            <!-- Question Types Breakdown -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Question Types Performance -->
-                <div>
-                    <h4 class="text-lg font-medium text-gray-900 mb-4">Performance by Question Type</h4>
-                    <div id="questionTypesBreakdown" class="space-y-4">
-                        <!-- Question types performance will be loaded here -->
-                    </div>
-                </div>
-                
-                <!-- Strengths and Weaknesses -->
-                <div>
-                    <h4 class="text-lg font-medium text-gray-900 mb-4">Areas for Improvement</h4>
-                    <div id="improvementAreas" class="space-y-4">
-                        <!-- Improvement suggestions will be loaded here -->
-                    </div>
+            <!-- Question Types Performance -->
+            <div>
+                <h4 class="text-lg font-medium text-gray-900 mb-4">Performance by Question Type</h4>
+                <div id="questionTypesBreakdown" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Question types performance will be loaded here -->
                 </div>
             </div>
         </div>
 
-        <!-- Next Steps -->
-        <div class="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-xl border border-primary/20 p-6">
-            <h3 class="text-xl font-semibold text-gray-900 mb-4">What's Next?</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="text-center p-4">
-                    <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                        </svg>
-                    </div>
-                    <h4 class="font-medium text-gray-900 mb-2">Practice More</h4>
-                    <p class="text-sm text-gray-600">Take more quizzes to improve your skills</p>
-                </div>
-                
-                <div class="text-center p-4">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <h4 class="font-medium text-gray-900 mb-2">Level Up</h4>
-                    <p class="text-sm text-gray-600">Move to the next difficulty level</p>
-                </div>
-                
-                <div class="text-center p-4">
-                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                        </svg>
-                    </div>
-                    <h4 class="font-medium text-gray-900 mb-2">Study Tips</h4>
-                    <p class="text-sm text-gray-600">Get personalized learning recommendations</p>
-                </div>
-            </div>
-        </div>
     </main>
 
     <!-- Error State -->
