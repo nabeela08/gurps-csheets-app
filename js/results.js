@@ -30,7 +30,6 @@ const continuelearningBtn = document.getElementById('continuelearningBtn');
 const reviewSection = document.getElementById('reviewSection');
 const questionsReview = document.getElementById('questionsReview');
 const questionTypesBreakdown = document.getElementById('questionTypesBreakdown');
-const improvementAreas = document.getElementById('improvementAreas');
 
 // Global variables
 let quizResults = null;
@@ -168,20 +167,28 @@ function generatePerformanceAnalysis() {
     // Analyze question types performance
     const typePerformance = analyzeQuestionTypes();
     renderQuestionTypesBreakdown(typePerformance);
-    
-    // Generate improvement suggestions
-    const improvements = generateImprovementSuggestions(typePerformance);
-    renderImprovementAreas(improvements);
 }
 
 // Analyze Question Types Performance
 function analyzeQuestionTypes() {
     const typeStats = {};
     
-    quizResults.questions.forEach((question, index) => {
-        const questionType = question.question_type || 'vocabulary';
-        const userAnswer = quizResults.answers[index];
-        const isCorrect = userAnswer !== null && userAnswer === getCorrectOptionId(question);
+    // Use detailed results if available, otherwise fall back to questions
+    const questionsData = quizResults.detailedResults || quizResults.questions;
+    
+    questionsData.forEach((questionData, index) => {
+        let questionType, isCorrect;
+        
+        if (quizResults.detailedResults) {
+            // Using detailed results from backend
+            questionType = questionData.question_type || 'vocabulary';
+            isCorrect = questionData.is_correct;
+        } else {
+            // Using original quiz questions format
+            questionType = questionData.question_type || 'vocabulary';
+            const userAnswer = quizResults.answers[index];
+            isCorrect = userAnswer !== null && userAnswer === getCorrectOptionId(questionData);
+        }
         
         if (!typeStats[questionType]) {
             typeStats[questionType] = {
@@ -196,7 +203,7 @@ function analyzeQuestionTypes() {
             typeStats[questionType].correct++;
         }
         typeStats[questionType].questions.push({
-            question: question,
+            question: questionData,
             isCorrect: isCorrect,
             index: index
         });
@@ -223,13 +230,21 @@ function renderQuestionTypesBreakdown(typePerformance) {
         const typeLabel = formatQuestionType(type);
         
         const typeElement = document.createElement('div');
-        typeElement.className = 'border border-gray-200 rounded-lg p-4';
+        typeElement.className = 'border border-gray-200 rounded-lg p-5 bg-white hover:shadow-md transition-shadow';
         
         typeElement.innerHTML = `
-            <div class="flex justify-between items-center mb-2">
-                <h5 class="font-medium text-gray-900">${typeLabel}</h5>
-                <span class="text-sm font-semibold ${percentage >= 70 ? 'text-green-600' : percentage >= 50 ? 'text-yellow-600' : 'text-red-600'}">
-                    ${stats.correct}/${stats.total} (${percentage}%)
+            <div class="flex items-center justify-between mb-3">
+                <h5 class="font-semibold text-gray-900">${typeLabel}</h5>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getQuestionTypeBadgeClass(type)}">
+                    ${typeLabel}
+                </span>
+            </div>
+            <div class="mb-3">
+                <span class="text-2xl font-bold ${percentage >= 70 ? 'text-green-600' : percentage >= 50 ? 'text-yellow-600' : 'text-red-600'}">
+                    ${percentage}%
+                </span>
+                <span class="text-sm text-gray-500 ml-2">
+                    (${stats.correct}/${stats.total})
                 </span>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
@@ -242,89 +257,6 @@ function renderQuestionTypesBreakdown(typePerformance) {
     });
 }
 
-// Generate Improvement Suggestions
-function generateImprovementSuggestions(typePerformance) {
-    const suggestions = [];
-    
-    Object.entries(typePerformance).forEach(([type, stats]) => {
-        const percentage = (stats.correct / stats.total) * 100;
-        
-        if (percentage < 70) {
-            let suggestion = {
-                type: type,
-                percentage: percentage,
-                message: '',
-                icon: ''
-            };
-            
-            switch(type) {
-                case 'vocabulary':
-                    suggestion.message = 'Practice more vocabulary exercises and flashcards';
-                    suggestion.icon = '📚';
-                    break;
-                case 'grammar':
-                    suggestion.message = 'Review grammar rules and sentence structures';
-                    suggestion.icon = '📝';
-                    break;
-                case 'sentence_formation':
-                    suggestion.message = 'Work on building complete sentences';
-                    suggestion.icon = '🔗';
-                    break;
-                case 'fill_in_blank':
-                    suggestion.message = 'Practice context clues and word associations';
-                    suggestion.icon = '🔍';
-                    break;
-                case 'error_correction':
-                    suggestion.message = 'Focus on identifying common mistakes';
-                    suggestion.icon = '✏️';
-                    break;
-                default:
-                    suggestion.message = 'Review this topic more thoroughly';
-                    suggestion.icon = '💡';
-            }
-            
-            suggestions.push(suggestion);
-        }
-    });
-    
-    // Add general suggestions if overall performance is low
-    if (quizResults.scorePercentage < 60) {
-        suggestions.push({
-            type: 'general',
-            percentage: quizResults.scorePercentage,
-            message: 'Consider reviewing the lesson material before retaking',
-            icon: '📖'
-        });
-    }
-    
-    return suggestions;
-}
-
-// Render Improvement Areas
-function renderImprovementAreas(suggestions) {
-    const container = improvementAreas;
-    
-    if (suggestions.length === 0) {
-        container.innerHTML = `
-            <div class="text-center py-4">
-                <div class="text-green-600 text-2xl mb-2">🎉</div>
-                <p class="text-green-700 font-medium">Excellent work!</p>
-                <p class="text-sm text-gray-600">You're performing well in all areas.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    container.innerHTML = suggestions.map(suggestion => `
-        <div class="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-            <span class="text-xl">${suggestion.icon}</span>
-            <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900">${formatQuestionType(suggestion.type)}</p>
-                <p class="text-sm text-gray-600">${suggestion.message}</p>
-            </div>
-        </div>
-    `).join('');
-}
 
 // Toggle Review Section
 function toggleReviewSection() {
@@ -340,23 +272,43 @@ function toggleReviewSection() {
 
 // Generate Question Review
 function generateQuestionReview() {
-    if (!quizResults.questions) return;
+    if (!quizResults.questions && !quizResults.detailedResults) return;
     
     const container = questionsReview;
     container.innerHTML = '';
     
-    quizResults.questions.forEach((question, index) => {
-        const userAnswer = quizResults.answers[index];
-        const correctOptionId = getCorrectOptionId(question);
-        const isCorrect = userAnswer !== null && userAnswer === correctOptionId;
-        const isSkipped = userAnswer === null;
+    // Use detailed results if available, otherwise fall back to questions
+    const questionsData = quizResults.detailedResults || quizResults.questions;
+    
+    questionsData.forEach((questionData, index) => {
+        let question, userAnswer, isCorrect, correctAnswer, userSelectedOption;
+        
+        if (quizResults.detailedResults) {
+            // Using detailed results from backend
+            question = {
+                question_id: questionData.question_id,
+                question_text: questionData.question_text,
+                question_type: questionData.question_type
+            };
+            userAnswer = questionData.submitted_answer.option_text;
+            isCorrect = questionData.is_correct;
+            correctAnswer = questionData.correct_answer.option_text;
+            userSelectedOption = { option_text: questionData.submitted_answer.option_text };
+        } else {
+            // Using original quiz questions format
+            question = questionData;
+            userAnswer = quizResults.answers[index];
+            const correctOptionId = getCorrectOptionId(question);
+            isCorrect = userAnswer !== null && userAnswer === correctOptionId;
+            userSelectedOption = question.options?.find(opt => opt.option_id === userAnswer);
+            const correctOption = question.options?.find(opt => opt.option_id === correctOptionId);
+            correctAnswer = correctOption?.option_text;
+        }
+        
+        const isSkipped = !userAnswer;
         
         const questionElement = document.createElement('div');
         questionElement.className = `border-2 rounded-lg p-6 ${isCorrect ? 'border-green-200 bg-green-50' : isSkipped ? 'border-yellow-200 bg-yellow-50' : 'border-red-200 bg-red-50'}`;
-        
-        // Get user selected option
-        const userSelectedOption = question.options?.find(opt => opt.option_id === userAnswer);
-        const correctOption = question.options?.find(opt => opt.option_id === correctOptionId);
         
         questionElement.innerHTML = `
             <div class="flex items-start justify-between mb-4">
@@ -392,39 +344,16 @@ function generateQuestionReview() {
             
             <h4 class="text-lg font-medium text-gray-900 mb-4">${question.question_text}</h4>
             
-            <div class="space-y-2 mb-4">
-                ${question.options?.map((option, optIndex) => `
-                    <div class="p-3 rounded-lg border-2 ${
-                        option.option_id === correctOptionId ? 'border-green-500 bg-green-100' :
-                        option.option_id === userAnswer && !isCorrect ? 'border-red-500 bg-red-100' :
-                        'border-gray-200 bg-white'
-                    }">
-                        <div class="flex items-center space-x-3">
-                            <div class="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-sm font-semibold ${
-                                option.option_id === correctOptionId ? 'bg-green-500 text-white' :
-                                option.option_id === userAnswer && !isCorrect ? 'bg-red-500 text-white' :
-                                'bg-gray-200 text-gray-600'
-                            }">
-                                ${String.fromCharCode(65 + optIndex)}
-                            </div>
-                            <p class="text-gray-900">${option.option_text}</p>
-                            ${option.option_id === correctOptionId ? '<span class="ml-auto text-green-600 font-medium">✓ Correct</span>' : ''}
-                            ${option.option_id === userAnswer && !isCorrect ? '<span class="ml-auto text-red-600 font-medium">Your answer</span>' : ''}
-                        </div>
-                    </div>
-                `).join('') || '<p class="text-gray-500">No options available</p>'}
-            </div>
-            
             ${!isSkipped ? `
                 <div class="border-t border-gray-200 pt-4">
                     <div class="text-sm">
                         <span class="font-medium text-gray-700">Your Answer:</span>
-                        <span class="${isCorrect ? 'text-green-700' : 'text-red-700'}">${userSelectedOption?.option_text || 'No answer selected'}</span>
+                        <span class="${isCorrect ? 'text-green-700' : 'text-red-700'}">${userAnswer || 'No answer selected'}</span>
                     </div>
                     ${!isCorrect ? `
                         <div class="text-sm mt-1">
                             <span class="font-medium text-gray-700">Correct Answer:</span>
-                            <span class="text-green-700">${correctOption?.option_text || 'Not available'}</span>
+                            <span class="text-green-700">${correctAnswer || 'Not available'}</span>
                         </div>
                     ` : ''}
                 </div>
@@ -432,7 +361,7 @@ function generateQuestionReview() {
                 <div class="border-t border-gray-200 pt-4">
                     <div class="text-sm">
                         <span class="font-medium text-gray-700">Correct Answer:</span>
-                        <span class="text-green-700">${correctOption?.option_text || 'Not available'}</span>
+                        <span class="text-green-700">${correctAnswer || 'Not available'}</span>
                     </div>
                 </div>
             `}

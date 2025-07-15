@@ -158,9 +158,10 @@ function updateProgressStats(progressData) {
         const completed = progressData.progress?.completed_lessons || 0;
         completedLessons.textContent = completed;
         
-        // Average score (mock data for now)
-        const avgScore = progressData.progress?.average_score || '0%';
-        averageScore.textContent = avgScore;
+        // Average score - format to show as percentage
+        const avgScoreValue = progressData.progress?.average_score || 0;
+        const formattedScore = avgScoreValue ? Math.round(avgScoreValue) + '%' : '0%';
+        averageScore.textContent = formattedScore;
     } else {
         // Default values
         currentLevel.textContent = 'Beginner';

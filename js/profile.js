@@ -13,9 +13,6 @@ const messageContainer = document.getElementById('messageContainer');
 const userAvatar = document.getElementById('userAvatar');
 const userName = document.getElementById('userName');
 const userEmail = document.getElementById('userEmail');
-const totalQuizzes = document.getElementById('totalQuizzes');
-const averageScore = document.getElementById('averageScore');
-const currentStreak = document.getElementById('currentStreak');
 
 // Tab elements
 const tabButtons = document.querySelectorAll('.tab-btn');
@@ -23,20 +20,15 @@ const tabContents = document.querySelectorAll('.tab-content');
 
 // Form elements
 const personalInfoForm = document.getElementById('personalInfoForm');
-const preferencesForm = document.getElementById('preferencesForm');
 const securityForm = document.getElementById('securityForm');
 const changePasswordBtn = document.getElementById('changePasswordBtn');
-const deleteAccountBtn = document.getElementById('deleteAccountBtn');
 
 // Progress elements
-const vocabProgress = document.getElementById('vocabProgress');
-const vocabBar = document.getElementById('vocabBar');
-const grammarProgress = document.getElementById('grammarProgress');
-const grammarBar = document.getElementById('grammarBar');
-const speakingProgress = document.getElementById('speakingProgress');
-const speakingBar = document.getElementById('speakingBar');
+const overallPerformance = document.getElementById('overallPerformance');
+const levelProgress = document.getElementById('levelProgress');
+const completedLessons = document.getElementById('completedLessons');
+const totalLessonsText = document.getElementById('totalLessonsText');
 const recentActivities = document.getElementById('recentActivities');
-const achievementsGrid = document.getElementById('achievementsGrid');
 
 // User data
 let userData = null;
@@ -73,7 +65,7 @@ function setupEventListeners() {
     saveProfileBtn.addEventListener('click', saveProfile);
     
     // Form change detection
-    [personalInfoForm, preferencesForm].forEach(form => {
+    [personalInfoForm].forEach(form => {
         form.addEventListener('input', () => {
             hasUnsavedChanges = true;
             showSaveButton();
@@ -86,7 +78,6 @@ function setupEventListeners() {
     
     // Security actions
     changePasswordBtn.addEventListener('click', changePassword);
-    deleteAccountBtn.addEventListener('click', confirmDeleteAccount);
     
     // Prevent accidental navigation
     window.addEventListener('beforeunload', function(e) {
@@ -112,10 +103,8 @@ async function loadProfile() {
         // Update profile display
         updateProfileHeader(profileData);
         populatePersonalInfo(profileData);
-        populatePreferences(profileData.preferences || {});
         updateProgressStats(progressData);
         renderRecentActivities(activityData);
-        renderAchievements(progressData.achievements || []);
         
         showProfile();
         
@@ -173,8 +162,8 @@ async function fetchRecentActivity() {
 
 // Update Profile Header
 function updateProfileHeader(profileData) {
-    if (profileData && profileData.user) {
-        const user = profileData.user;
+    if (profileData && profileData.profile) {
+        const user = profileData.profile;
         
         // Update avatar
         userAvatar.textContent = user.username ? user.username.charAt(0).toUpperCase() : 'U';
@@ -183,63 +172,64 @@ function updateProfileHeader(profileData) {
         userName.textContent = user.username || 'User';
         userEmail.textContent = user.email || '';
         
-        // Update quick stats (mock data for now)
-        totalQuizzes.textContent = profileData.stats?.total_quizzes || '0';
-        averageScore.textContent = `${profileData.stats?.average_score || 0}%`;
-        currentStreak.textContent = profileData.stats?.current_streak || '0';
+        // Quick stats will be updated by updateProgressStats function
     }
 }
 
 // Populate Personal Information Form
 function populatePersonalInfo(profileData) {
-    if (profileData && profileData.user) {
-        const user = profileData.user;
+    if (profileData && profileData.profile) {
+        const user = profileData.profile;
         
         document.getElementById('username').value = user.username || '';
-        document.getElementById('email').value = user.email || '';
-        document.getElementById('currentLevel').value = user.current_level || 'beginner';
-        document.getElementById('bio').value = user.bio || '';
+        document.getElementById('email').textContent = user.email || '';
+        document.getElementById('currentLevel').textContent = user.current_level_name || 'Beginner';
     }
 }
 
-// Populate Preferences Form
-function populatePreferences(preferences) {
-    // Learning goals
-    const goals = preferences.learning_goals || [];
-    document.querySelectorAll('input[name="goals"]').forEach(checkbox => {
-        checkbox.checked = goals.includes(checkbox.value);
-    });
-    
-    // Study preferences
-    document.getElementById('studyTime').value = preferences.study_time || 'morning';
-    document.getElementById('dailyGoal').value = preferences.daily_goal || '30';
-    
-    // Notifications
-    const notifications = preferences.notifications || [];
-    document.querySelectorAll('input[name="notifications"]').forEach(checkbox => {
-        checkbox.checked = notifications.includes(checkbox.value);
-    });
-}
 
 // Update Progress Statistics
 function updateProgressStats(progressData) {
-    // Mock progress data for demonstration
-    const progress = progressData.progress || {};
-    
-    // Vocabulary progress
-    const vocabPercent = progress.vocabulary_progress || 0;
-    vocabProgress.textContent = `${vocabPercent}%`;
-    vocabBar.style.width = `${vocabPercent}%`;
-    
-    // Grammar progress
-    const grammarPercent = progress.grammar_progress || 0;
-    grammarProgress.textContent = `${grammarPercent}%`;
-    grammarBar.style.width = `${grammarPercent}%`;
-    
-    // Speaking progress
-    const speakingPercent = progress.speaking_progress || 0;
-    speakingProgress.textContent = `${speakingPercent}%`;
-    speakingBar.style.width = `${speakingPercent}%`;
+    if (progressData) {
+        // Get completed lessons data
+        const completedLessonsData = progressData.completed_lessons || [];
+        const levelProgressData = progressData.level_progress || {};
+        
+        // 1. Overall Performance (Average Score)
+        const progress = progressData.progress || {};
+        const averageScoreValue = progress.average_score ? Math.round(progress.average_score) : 0;
+        overallPerformance.textContent = `${averageScoreValue}%`;
+        
+        // 2. Level Progress (Current Level Completion)
+        const currentLevelId = progressData.user?.current_level_id || 1;
+        const currentLevelProgress = levelProgressData[currentLevelId] || {};
+        const levelCompletionPercent = Math.round(currentLevelProgress.completion_percentage || 0);
+        levelProgress.textContent = `${levelCompletionPercent}%`;
+        
+        // 3. Lessons Completed  
+        const completedCount = progress.completed_lessons || completedLessonsData.length || 0;
+        completedLessons.textContent = completedCount.toString();
+        
+        // Calculate total lessons (estimate from level progress data)
+        let totalLessonsCount = 0;
+        Object.values(levelProgressData).forEach(level => {
+            totalLessonsCount += level.total_lessons || 0;
+        });
+        
+        if (totalLessonsCount === 0) {
+            // Fallback: estimate total lessons (3 levels × ~10 lessons each)
+            totalLessonsCount = 30;
+        }
+        
+        totalLessonsText.textContent = `out of ${totalLessonsCount} total`;
+        
+    } else {
+        // Fallback values
+        overallPerformance.textContent = '0%';
+        levelProgress.textContent = '0%';
+        completedLessons.textContent = '0';
+        totalLessonsText.textContent = 'out of 0 total';
+    }
 }
 
 // Render Recent Activities
@@ -266,28 +256,6 @@ function renderRecentActivities(activities) {
     `).join('');
 }
 
-// Render Achievements
-function renderAchievements(achievements) {
-    const defaultAchievements = [
-        { id: 'first_quiz', name: 'First Quiz', description: 'Complete your first quiz', icon: '🎯', earned: false },
-        { id: 'perfect_score', name: 'Perfect Score', description: 'Score 100% on a quiz', icon: '⭐', earned: false },
-        { id: 'week_streak', name: 'Week Streak', description: 'Study for 7 days in a row', icon: '🔥', earned: false },
-        { id: 'grammar_master', name: 'Grammar Master', description: 'Ace 10 grammar quizzes', icon: '📚', earned: false },
-        { id: 'vocabulary_expert', name: 'Vocabulary Expert', description: 'Learn 100 new words', icon: '💡', earned: false },
-        { id: 'quick_learner', name: 'Quick Learner', description: 'Complete a quiz in under 5 minutes', icon: '⚡', earned: false },
-        { id: 'dedicated_student', name: 'Dedicated Student', description: 'Study for 30 days', icon: '🏆', earned: false },
-        { id: 'night_owl', name: 'Night Owl', description: 'Study after midnight', icon: '🦉', earned: false }
-    ];
-    
-    achievementsGrid.innerHTML = defaultAchievements.map(achievement => `
-        <div class="text-center p-4 rounded-lg border-2 ${achievement.earned ? 'border-yellow-300 bg-yellow-50' : 'border-gray-200 bg-gray-50'}">
-            <div class="text-2xl mb-2 ${achievement.earned ? '' : 'grayscale opacity-50'}">${achievement.icon}</div>
-            <h4 class="font-medium text-sm text-gray-900 mb-1">${achievement.name}</h4>
-            <p class="text-xs text-gray-600">${achievement.description}</p>
-            ${achievement.earned ? '<span class="inline-block mt-2 px-2 py-1 bg-yellow-200 text-yellow-800 text-xs rounded-full">Earned</span>' : ''}
-        </div>
-    `).join('');
-}
 
 // Tab Management
 function switchTab(tabName) {
@@ -317,24 +285,12 @@ async function saveProfile() {
     try {
         // Collect form data
         const personalData = new FormData(personalInfoForm);
-        const preferencesData = new FormData(preferencesForm);
         
         // Convert FormData to objects
         const personalInfo = Object.fromEntries(personalData);
         
-        // Handle preferences with multiple values
-        const preferences = {
-            learning_goals: Array.from(preferencesForm.querySelectorAll('input[name="goals"]:checked')).map(cb => cb.value),
-            study_time: preferencesData.get('studyTime'),
-            daily_goal: preferencesData.get('dailyGoal'),
-            notifications: Array.from(preferencesForm.querySelectorAll('input[name="notifications"]:checked')).map(cb => cb.value)
-        };
-        
-        // Combine data
-        const profileUpdate = {
-            ...personalInfo,
-            preferences: preferences
-        };
+        // Profile update data
+        const profileUpdate = personalInfo;
         
         // Save to API
         const response = await fetch(`${API_BASE_URL}/user/profile`, {
@@ -421,41 +377,6 @@ async function changePassword() {
     }
 }
 
-// Confirm Delete Account
-function confirmDeleteAccount() {
-    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-        if (confirm('This will permanently delete all your progress and data. Are you absolutely sure?')) {
-            deleteAccount();
-        }
-    }
-}
-
-// Delete Account
-async function deleteAccount() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/user/account`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${authToken}`
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to delete account');
-        }
-        
-        // Clear local storage
-        localStorage.clear();
-        
-        // Redirect to login with message
-        alert('Your account has been deleted successfully.');
-        window.location.href = '../pages/login.html';
-        
-    } catch (error) {
-        console.error('Error deleting account:', error);
-        showMessage('Failed to delete account. Please try again.', 'error');
-    }
-}
 
 // Utility Functions
 function showSaveButton() {
