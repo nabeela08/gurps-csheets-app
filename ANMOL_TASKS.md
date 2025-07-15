@@ -29,15 +29,14 @@
 - [x] 20. User Profile Management: Track current level and completed lessons
 - [x] 22. Different Question Types: Implement fill-in-blank and error correction exercises
 - [x] 23. Content Categorization: Add skill type classification (grammar/vocabulary etc)
-- [ ] 24. Progress Tracking: Implement prerequisite checking and handle how users move from one level to the next.
-- [ ] 25. Quiz Retake System: Allow users to retake quizzes to improve scores
+- [x] 24. Progress Tracking: Implement prerequisite checking and handle how users move from one level to the next.
+- [x] 25. Quiz Retake System: Allow users to retake quizzes to improve scores
 - [x] 26. Score Calculation: Implement percentage-based scoring with passing thresholds
 
 ## Security & Testing
 - [x] 27. Session Management: Secure authentication with proper token handling
-- [ ] 28. Input Validation: Server-side validation for all user inputs and API calls
+- [x] 28. Input Validation: Server-side validation for all user inputs and API calls
 - [x] 29. SQL Injection Prevention: Use parameterized queries throughout the application
-- [ ] 30. Error Handling: Comprehensive error handling with user-friendly messages
-- [ ] 31. Logging System: Implement logging for debugging and monitoring
-- [ ] 32. Database Optimization: Add indexes on frequently queried fields
-- [ ] 33. Unit Tests: Create comprehensive test suite for all Python modules
+- [x] 30. Error Handling: Comprehensive error handling with user-friendly messages
+- [x] 31. Logging System: Implement logging for debugging and monitoring
+- [x] 32. Database Optimization: Add indexes on frequently queried fields
