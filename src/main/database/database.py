@@ -21,11 +21,11 @@ class DatabaseManager:
     """Database manager with connection pooling"""
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
-        self.config = config or self._get_default_config()
+        self.config = config or self._default_config()
         self.pool = None
         self._create_connection_pool()
     
-    def _get_default_config(self) -> Dict[str, Any]:
+    def _default_config(self) -> Dict[str, Any]:
         """Get default database configuration"""
         return {
             'host': os.getenv('DB_HOST', 'localhost'),
@@ -51,7 +51,7 @@ class DatabaseManager:
             raise
     
     @contextmanager
-    def get_connection(self):
+    def connection(self):
         """Context manager for database connections"""
         connection = None
         try:
@@ -68,7 +68,7 @@ class DatabaseManager:
     
     def execute_query(self, query: str, params: Optional[Tuple] = None) -> List[Dict[str, Any]]:
         """Execute SELECT query and return results"""
-        with self.get_connection() as connection:
+        with self.connection() as connection:
             cursor = connection.cursor(dictionary=True)
             try:
                 cursor.execute(query, params or ())
@@ -82,7 +82,7 @@ class DatabaseManager:
     
     def execute_insert(self, query: str, params: Optional[Tuple] = None) -> int:
         """Execute INSERT query and return last inserted ID"""
-        with self.get_connection() as connection:
+        with self.connection() as connection:
             cursor = connection.cursor()
             try:
                 cursor.execute(query, params or ())
@@ -97,7 +97,7 @@ class DatabaseManager:
     
     def execute_update(self, query: str, params: Optional[Tuple] = None) -> int:
         """Execute UPDATE/DELETE query and return affected rows"""
-        with self.get_connection() as connection:
+        with self.connection() as connection:
             cursor = connection.cursor()
             try:
                 cursor.execute(query, params or ())
@@ -113,7 +113,7 @@ class DatabaseManager:
     def test_connection(self) -> bool:
         """Test database connection"""
         try:
-            with self.get_connection() as connection:
+            with self.connection() as connection:
                 cursor = connection.cursor()
                 cursor.execute("SELECT 1")
                 result = cursor.fetchone()
@@ -126,7 +126,7 @@ class DatabaseManager:
 # Global database manager instance
 db_manager = None
 
-def get_db_manager() -> DatabaseManager:
+def db_manager_instance() -> DatabaseManager:
     """Get global database manager instance"""
     global db_manager
     if db_manager is None:
@@ -135,12 +135,12 @@ def get_db_manager() -> DatabaseManager:
 
 def query(sql: str, params: Optional[Tuple] = None) -> List[Dict[str, Any]]:
     """Execute SELECT query"""
-    return get_db_manager().execute_query(sql, params)
+    return db_manager_instance().execute_query(sql, params)
 
 def insert(sql: str, params: Optional[Tuple] = None) -> int:
     """Execute INSERT query"""
-    return get_db_manager().execute_insert(sql, params)
+    return db_manager_instance().execute_insert(sql, params)
 
 def update(sql: str, params: Optional[Tuple] = None) -> int:
     """Execute UPDATE/DELETE query"""
-    return get_db_manager().execute_update(sql, params)
+    return db_manager_instance().execute_update(sql, params)
