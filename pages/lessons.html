@@ -92,43 +92,6 @@
             </div>
         </div>
 
-        <!-- Filter and Sort -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-            <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
-                <!-- Filters -->
-                <div class="flex flex-wrap items-center space-x-4">
-                    <div class="flex items-center space-x-2">
-                        <label class="text-sm font-medium text-gray-700">Status:</label>
-                        <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <option value="all">All Lessons</option>
-                            <option value="not_started">Not Started</option>
-                            <option value="in_progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <label class="text-sm font-medium text-gray-700">Difficulty:</label>
-                        <select id="difficultyFilter" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
-                            <option value="all">All Levels</option>
-                            <option value="easy">Easy</option>
-                            <option value="medium">Medium</option>
-                            <option value="hard">Hard</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Sort -->
-                <div class="flex items-center space-x-2">
-                    <label class="text-sm font-medium text-gray-700">Sort by:</label>
-                    <select id="sortBy" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <option value="order">Lesson Order</option>
-                        <option value="name">Name A-Z</option>
-                        <option value="difficulty">Difficulty</option>
-                        <option value="progress">Progress</option>
-                    </select>
-                </div>
-            </div>
-        </div>
 
         <!-- Lessons Grid -->
         <div id="lessonsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -164,42 +127,6 @@
         </div>
     </div>
 
-    <!-- Lesson Modal -->
-    <div id="lessonModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <!-- Modal Header -->
-            <div class="flex items-center justify-between p-6 border-b border-gray-200">
-                <h3 class="text-xl font-semibold text-gray-900" id="modalLessonTitle">Lesson Details</h3>
-                <button id="closeModal" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- Modal Content -->
-            <div class="p-6">
-                <div id="modalContent">
-                    <!-- Content will be dynamically loaded -->
-                </div>
-                
-                <!-- Modal Actions -->
-                <div class="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
-                    <button id="modalBackBtn" class="text-gray-500 hover:text-gray-700 font-medium">
-                        Back to Lessons
-                    </button>
-                    <div class="space-x-3">
-                        <button id="previewLessonBtn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">
-                            Preview
-                        </button>
-                        <button id="startLessonBtn" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors font-medium">
-                            Start Lesson
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- JavaScript -->
     <script src="../js/lessons.js"></script>
