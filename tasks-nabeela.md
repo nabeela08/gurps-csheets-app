@@ -22,8 +22,8 @@
 - [x] 15. Error Handling: Display user-friendly error messages from API responses
 
 ## Testing
-- [ ] 16. Frontend Tests: Test user interface components and user workflows
-- [ ] 17. Cross-browser Testing: Ensure compatibility across different browsers
+- [x] 16. Frontend Tests: Test user interface components and user workflows
+- [x] 17. Cross-browser Testing: Ensure compatibility across different browsers
 
 ## API Endpoints to Integrate:
 - POST /auth/register - User registration
